@@ -1,0 +1,388 @@
+Release notes for BMX 2.1 - released July 22, 2009
+
+*** IMPORTANT ***
+DO NOT INSTALL ON RPMS. THIS RELEASE IS FOR VISTA SYSTEMS!
+*****************
+
+BMX.net is a broker and a software library that allows programs in .net to communicate with Vista. BMX.net support regular RPC's, SQL statements, and ADO.net updatable datasets. The user is referred to Indian Health Service's documentation for BMX:
+
+	- Installation manual for Cache 5.x and above: http://www.ihs.gov/Cio/RPMS/PackageDocs/bmx/bmx_020i.pdf
+	- Programming manual: http://www.ihs.gov/Cio/RPMS/PackageDocs/bmx/bmx_020u.pdf
+	- Technical manual: http://www.ihs.gov/Cio/RPMS/PackageDocs/bmx/bmx_020t.pdf
+
+Release 2.1 adds support for GT.M.
+*** IMPORTANT ***
+BMX support for GT.M uses xinetd listeners; not listeners managed by the Mumps environment. As such, the installation instructions provided by IHS won't work for GT.M.
+*****************
+
+Pre-requisites:
+	Fileman v22
+	Kernel v8
+	XB/ZIB v3
+	XWB 1.1 patch 100001 (optional - to enable a unified listener for all brokers)
+
+Pre-requisites are examined by the environment check routine.
+
+Installation Instructions
+=========================
+Installation of BMX.net 2.1 consists of 6 steps.
+1. Install BMX in Vista
+2. Install Xinetd
+3. Configure listener in Xinetd
+4. Configure shell script that that is called by Xinetd
+5. Users who don't hold XUPROGMODE will need BMXPRC assigned as an option. If you assign it as part of their primary menu, make sure to rebuild the menu before proceeding.
+6. (optional) Install XWB 1.1 patch 100001
+
+1. Install BMX in Vista
+=========================
+GTM>s DUZ=9 D ^XUP
+
+Setting up programmer environment
+This is a TEST account.
+
+Terminal Type set to: C-VT100
+
+You have 46 new messages.
+Select OPTION NAME: xpd main       Kernel Installation & Distribution System
+
+
+          Edits and Distribution ...
+          Utilities ...
+          Installation ...
+          Patch Monitor Main Menu ...
+
+Select Kernel Installation & Distribution System Option: INStallation
+
+
+   1      Load a Distribution
+   2      Verify Checksums in Transport Global
+   3      Print Transport Global
+   4      Compare Transport Global to Current System
+   5      Backup a Transport Global
+   6      Install Package(s)
+          Restart Install of Package(s)
+          Unload a Distribution
+          Checksum/2nd Line Lists
+          Directory Listing to MailMan
+          Find/Delete File in Download Directory
+
+
+Select Installation Option: 1  Load a Distribution
+Enter a Host File: /opt/wv/k/bmx0210.k
+
+KIDS Distribution saved on Jul 22, 2009@13:07:52
+Comment: BMX.net 2.1; add support for GT.M
+
+This Distribution contains Transport Globals for the following Package(s):
+   BMX 2.1
+Distribution OK!
+
+Want to Continue with Load? YES// 
+Loading Distribution...
+
+Build BMX 2.1 has an Enviromental Check Routine
+Want to RUN the Environment Check Routine? YES// 
+   BMX 2.1
+Will first run the Environment Check Routine, BMXE01
+
+
+Hello, FIVE COORDINATOR
+
+Checking Environment for Install of Version 2.0 of BMX.
+
+Need at least FileMan 22.....FileMan 22.0 Present
+
+Need at least Kernel 8.0.....Kernel 8.0 Present
+
+Need at least XB/ZIB 3.....XB/ZIB 4.0 Present
+Use INSTALL NAME: BMX 2.1 to install this Distribution.
+
+
+
+   1      Load a Distribution
+   2      Verify Checksums in Transport Global
+   3      Print Transport Global
+   4      Compare Transport Global to Current System
+   5      Backup a Transport Global
+   6      Install Package(s)
+          Restart Install of Package(s)
+          Unload a Distribution
+          Checksum/2nd Line Lists
+          Directory Listing to MailMan
+          Find/Delete File in Download Directory
+
+Select Installation Option:  6  Install Package(s)
+Select INSTALL NAME:    BMX 2.1     Loaded from Distribution     Loaded from Dis
+tribution  7/22/09@13:22:57
+     => BMX.net 2.1; add support for GT.M  ;Created on Jul 22, 2009@13:07:52
+
+This Distribution was loaded on Jul 22, 2009@13:22:57 with header of 
+   BMX.net 2.1; add support for GT.M  ;Created on Jul 22, 2009@13:07:52
+   It consisted of the following Install(s):
+        BMX 2.1
+
+   Checking BMX 2.1 for overlap with VOE 1.0 ...... OK
+            No overlap found
+
+
+   Checking BMX 2.1 for overlap with VOE 1.1 ...... OK
+            No overlap found
+
+
+   Checking BMX 2.1 for overlap with NO HOME 1.0 ...... OK
+            No overlap found
+
+Checking Install for Package BMX 2.1
+Will first run the Environment Check Routine, BMXE01
+
+
+Hello, FIVE COORDINATOR
+
+Checking Environment for Install of Version 2.0 of BMX.
+
+Need at least FileMan 22.....FileMan 22.0 Present
+
+Need at least Kernel 8.0.....Kernel 8.0 Present
+
+Need at least XB/ZIB 3.....XB/ZIB 4.0 Present
+
+Install Questions for BMX 2.1
+
+Incoming Files:
+
+
+   90093.1   BMX USER
+
+
+   90093.2   BMX APPLICATION
+
+
+   90093.5   BMXNET MONITOR
+
+
+   90093.9   BMX GUI REPORT
+
+
+   90093.98  BMX ADO LOG
+
+
+   90093.99  BMX ADO SCHEMA  (including data)
+
+Want KIDS to Rebuild Menu Trees Upon Completion of Install? NO// 
+
+
+Want KIDS to INHIBIT LOGONs during the install? NO// 
+Want to DISABLE Scheduled Options, Menu Options, and Protocols? NO// 
+
+Enter the Device you want to print the Install messages.
+Enter a '^' to abort the install.
+
+DEVICE: HOME// ;80;999999
+ 
+<compilation errors pass by -- that's normal>
+
+Install Completed
+
+2. Install Xinetd
+=================
+User is referred to their OS's documentation
+
+3. Configure listener in Xinetd
+===============================
+Create a file in /etc/xinetd.d, with whatever name you like. I called mine BMX10502, because that's the port I am going to use. Here are the contents (don't include my comments)
+
+service BMX10502
+{
+    socket_type     = stream
+    type            = UNLISTED
+    port            = 10502 (that can be whatever you want it to be)
+    protocol        = tcp
+    user            = xxxxxxxx (that's a unix user who has access to run GT.M)
+    wait            = no
+    disable         = no
+    server          = /bin/sh
+    server_args     = /opt/wv2/BMX10502 (that's the location of the script that this listener will launch when it gets a TCP call on 10502)
+}
+
+4. Configure shell script that that is called by Xinetd
+=======================================================
+Create a script that looks like this.
+The essential lines are the ones defining gtm_dist, gtmgbldir, gtmroutines, and $gtm_dist/mumps - run XINETD^BMXMON. XINETD^BMXMON is the entry point responsible for receiving TCP calls from XINETD.
+
+#!/bin/bash
+# BMX Broker started by Xinet.d
+cd /opt/wv2
+date >> /opt/wv2/bmx.log
+
+# Get GT.M profile
+export vista_home="/opt/wv2"
+export gtm_dist="/opt/gtm"
+export gtmgbldir="$vista_home/g/mumps.gld"
+export gtmroutines="$vista_home/o($vista_home/p) $vista_home/o($vista_home/r) $gtm_dist"
+
+# Run
+$gtm_dist/mumps -run XINETD^BMXMON 2>>/opt/wv2/bmx.log
+exit 
+
+Note: If you install XWB 1.1 patch 100001, you can use the CPRS listener. XWBTCPM will decide which protocol it is and route it accordingly.
+
+5. Add BMXRPC to the user's menu
+================================
+GTM>D P^DI
+
+
+VA FileMan 22.0
+
+
+Select OPTION: ENTER OR EDIT FILE ENTRIES  
+
+
+
+INPUT TO WHAT FILE: PACKAGE// 200  NEW PERSON  (77 entries)
+EDIT WHICH FIELD: ALL// SECONDARY MENU OPTIONS    (multiple)
+   EDIT WHICH SECONDARY MENU OPTIONS SUB-FIELD: ALL// .01  SECONDARY MENU OPTION
+S
+   THEN EDIT SECONDARY MENU OPTIONS SUB-FIELD: 
+THEN EDIT FIELD: 
+
+
+Select NEW PERSON NAME: CLERK,EIGHT                 Medical Clerk
+Select SECONDARY MENU OPTIONS: OR CPRS GUI CHART// 
+  SECONDARY MENU OPTIONS: OR CPRS GUI CHART// 
+Select SECONDARY MENU OPTIONS: BMXRPC       BMX Procedure Calls
+  Are you adding 'BMXRPC' as a new SECONDARY MENU OPTIONS (the 2ND for this NEW
+ PERSON)? No// Y  (Yes)
+Select SECONDARY MENU OPTIONS: 
+
+6. (optional) Install XWB 1.1 patch 100001
+==========================================
+This patch allows you to use the CPRS listener for BMX.
+
+GTM>d ^XPDIL
+
+Enter a Host File: /opt/wv/k/xwb0110_100001.k
+
+KIDS Distribution saved on Jul 22, 2009@13:55:06
+Comment: XWB patch to support BMX.net calls
+
+This Distribution contains Transport Globals for the following Package(s):
+   XWB*1.1*100001
+Distribution OK!
+
+Want to Continue with Load? YES// 
+Loading Distribution...
+
+   XWB*1.1*100001
+Use INSTALL NAME: XWB*1.1*100001 to install this Distribution.
+
+GTM>d ^XPDI
+
+Select INSTALL NAME:    XWB*1.1*100001     Loaded from Distribution     Loaded f
+rom Distribution  7/22/09@13:56:39
+     => XWB patch to support BMX.net calls  ;Created on Jul 22, 2009@13:55:06
+
+This Distribution was loaded on Jul 22, 2009@13:56:39 with header of 
+   XWB patch to support BMX.net calls  ;Created on Jul 22, 2009@13:55:06
+   It consisted of the following Install(s):
+ XWB*1.1*100001
+
+   Checking XWB*1.1*100001 for overlap with VOE 1.0 .. OK
+            No overlap found
+
+Install Completed.
+
+TESTING BMX.net
+===============
+In the package, there is a C# file called bmxTesterForVista_0200.cs and a .Net dll called BMXNet20.dll.
+To compile the file on Mono, use the generics Mono C# compiler (gmcs), referencing BMXNet20.dll and System.Data.dll. To compile on Windows, use csc with the same arguments.
+
+	gmcs /r:BMXNet20.dll,System.Data.dll bmxTesterForVista_0200.cs
+
+Then you can execute it:
+
+mono bmxTesterForVista_0200.exe
+Enter IP Address of Server: 127.0.0.1
+Enter the listener port: 9260
+Enter your Access Code: vistais#1
+Enter your Verify Code: catdog.22
+Connected: True DUZ: 47
+Simple RPC: User Name: CLERK,EIGHT
+CPRS RPC with Parameters: 
+14^Administrator,System
+65^Analyst,One^- ANALYST
+66^Analyst,Three^- ANALYST
+69^Analyst,Two^- ANALYST
+47^Clerk,Eight^- Medical Clerk
+50^Clerk,Eleven^- Medical Clerk
+54^Clerk,Fifteen^- Medical Clerk
+44^Clerk,Five^- Medical Clerk
+43^Clerk,Four^- Medical Clerk
+53^Clerk,Fourteen^- Medical Clerk
+48^Clerk,Nine^- Medical Clerk
+46^Clerk,Seven^- Medical Clerk
+45^Clerk,Six^- Medical Clerk
+49^Clerk,Ten^- Medical Clerk
+52^Clerk,Thirteen^- Medical Clerk
+42^Clerk,Three^- Medical Clerk
+51^Clerk,Twelve^- Medical Clerk
+41^Clerk,Two^- Medical Clerk
+58^Coordinator,Clinical^- CLINICAL COORDINATOR
+9^Coordinator,Five^- ANALYST
+3^Coordinator,Four
+2^Coordinator,Nine
+63^Coordinator,One^- ANALYST
+64^Coordinator,Seven
+60^Coordinator,Six^- CLINICAL COORDINATOR
+67^Coordinator,Three^- ANALYST
+68^Coordinator,Two^- ANALYST
+21^Doctor,Eight^- Physician
+24^Doctor,Eleven^- Physician
+18^Doctor,Five^- Physician
+17^Doctor,Four^- Physician
+22^Doctor,Nine^- Physician
+11^Doctor,One^- Physician
+20^Doctor,Seven^- Physician
+19^Doctor,Six^- Physician
+23^Doctor,Ten^- Physician
+16^Doctor,Three^- Physician
+26^Doctor,Twelve^- Physician
+15^Doctor,Two^- Physician
+62^Lab,Superuser^- ANALYST
+8^Manager,System^- System Manager
+33^Nurse,Eight^- Nurse
+36^Nurse,Eleven^- Nurse
+40^Nurse,Fifteen^- Nurse
+
+
+SQL Statement
+ZZ PATIENT,TEST ONE
+FEMALE
+1/24/1945 12:00:00 AM
+ZZ PATIENT,TEST THREE
+MALE
+1/15/1968 12:00:00 AM
+ZZ PATIENT,TEST TWO
+MALE
+12/25/1957 12:00:00 AM
+
+BMX Schema RPC
+
+ZZ PATIENT,TEST ONEF1/24/1945 12:00:00 AM
+ZZ PATIENT,TEST THREEM1/15/1968 12:00:00 AM
+ZZ PATIENT,TEST TWOM12/25/1957 12:00:00 AM
+
+More complicated SQL
+
+NAMESTATEABBRAGE
+ZZ PATIENT,TEST ONENEW YORKNY64
+ZZ PATIENT,TEST THREEINDIANAIN41
+ZZ PATIENT,TEST TWOKANSASKS51
+
+If this doesn't work, you will get error messages like this:
+Unhandled Exception: IndianHealthService.BMXNet.BMXNetException: Connection refused  at System.Net.Sockets.Socket.Connect (System.Net.EndPoint remote_end) [0x00000] 
+  at System.Net.Sockets.TcpClient.Connect (System.Net.IPEndPoint remote_end_point) [0x00000] 
+  at System.Net.Sockets.TcpClient.Connect (System.Net.IPAddress[] ipAddresses, Int32 port) [0x00000] 
+  at IndianHealthService.BMXNet.BMXNetLib.a (System.String A_0) [0x00000] 
+
+You may get Connection refused; connection timed out, not a valid access/verify code, verify code must be changed now, and User doesn't have access to Context BMXRPC, etc.
+

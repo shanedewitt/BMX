@@ -1,0 +1,8 @@
+BMXUTL7	; IHS/OIT/HMW - BMXNET INSTALLATION CALLS ;
+	;;2.1;BMX;;Jul 26, 2009
+	;
+	;
+ENV	;EP Environment Check
+	I $G(XPDENV)=1 D
+	. S XPDDIQ("XPZ1")=0
+	. S XPDDIQ("XPZ2")=0
