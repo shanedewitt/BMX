@@ -1104,7 +1104,7 @@ namespace IndianHealthService.BMXNet
 			{
 				//Use this overload to connect to the last M server
 				//using Windows NT integrated security
-				m_ci.LoadConnectInfo();
+				//m_ci.LoadConnectInfo();
 
 				//Use the following overload to force prompt for AV codes.
 				//You can also use this overload if
@@ -1112,7 +1112,7 @@ namespace IndianHealthService.BMXNet
 				// AV codes. You may then pass
 				// the values you collected to LoadConnectInfo(access,verify)
 				//
-				//m_ci.LoadConnectInfo("","");
+				m_ci.LoadConnectInfo("","");
 
 				m_ci.AppContext = "BMXRPC";
 				txtContext.Text = m_ci.AppContext;
