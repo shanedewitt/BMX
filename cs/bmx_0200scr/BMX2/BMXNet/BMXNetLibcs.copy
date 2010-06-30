@@ -1,0 +1,852 @@
+using System;
+using System.Diagnostics;
+using System.Text;
+using System.IO;
+using System.Net.Sockets;
+using System.Net;
+
+
+namespace IndianHealthService.BMXNet
+{
+	/// <summary>
+	/// BMXNetLib implements low-level socket connectivity to RPMS databases.
+	/// The VA RPC Broker must be running on the RPMS server in order for 
+	/// BMXNetLib to connect.
+	/// </summary>
+	public class BMXNetLib
+	{
+		public BMXNetLib()
+		{
+			m_sWKID = "XWB";
+			m_sWINH = "";
+			m_sPRCH = "";
+			m_sWISH = "";
+			m_cHDR = ADEBHDR(m_sWKID,m_sWINH,m_sPRCH,m_sWISH);
+
+		}
+		
+		#region Piece Functions
+
+		/// <summary>
+		/// Corresponds to M's $L(STRING,DELIMITER)
+		/// </summary>
+		/// <param name="sInput"></param>
+		/// <param name="sDelim"></param>
+		/// <returns></returns>
+		public static int PieceLength(string sInput, string sDelim)
+		{
+			char[] cDelim = sDelim.ToCharArray();
+			string [] cSplit = sInput.Split(cDelim);
+			return cSplit.GetLength(0);
+		}
+
+		/// <summary>
+		/// Corresponds to M's $$Piece function
+		/// </summary>
+		/// <param name="sInput"></param>
+		/// <param name="sDelim"></param>
+		/// <param name="nNumber"></param>
+		/// <returns></returns>
+		public static string Piece(string sInput, string sDelim, int nNumber)
+		{
+			char[] cDelim = sDelim.ToCharArray();
+			string [] cSplit = sInput.Split(cDelim);
+			int nLength = cSplit.GetLength(0);
+			if ((nLength < nNumber)||(nNumber < 1))
+				return "";
+			return cSplit[nNumber-1];
+
+		}
+
+//		public static string Piece(string[] sInput, string sDelim, int nNumber)
+//		{
+//			char[] cDelim = sDelim.ToCharArray();
+//			int nLength = sInput.GetLength(0);
+//			if ((nLength < nNumber)||(nNumber < 1))
+//				return "";
+//
+//			return sInput[nNumber-1];
+//
+//		}
+
+		public static string Piece(string sInput, string sDelim, int nNumber, int nEnd)
+		{
+			try 
+			{
+				if (nNumber < 0)
+					nNumber = 1;
+
+				if (nEnd < nNumber)
+					return "";
+
+				if (nEnd == nNumber)
+					return Piece(sInput, sDelim, nNumber);
+
+				char[] cDelim = sDelim.ToCharArray();
+				string [] cSplit = sInput.Split(cDelim);
+				int nLength = cSplit.GetLength(0);
+				if ((nLength < nNumber)||(nNumber < 1))
+					return "";
+
+				//nNumber = 1-based index of the starting element to return
+				//nLength = count of elements
+				//nEnd = 1-based index of last element to return
+				//nCount = number of elements past nNumber to return
+
+				//convert nNumber to 0-based index:
+				nNumber--;
+
+				//convert nEnd to 0-based index;
+				nEnd--;
+
+				//Calculate nCount;
+				int nCount = nEnd - nNumber + 1;
+
+				//Adjust nCount for number of elements
+				if (nCount + nNumber >= nLength)
+				{
+					nCount = nLength - nNumber;
+				}
+
+				string sRet =  string.Join(sDelim, cSplit, nNumber, nCount );
+				return sRet;
+			}
+			catch (Exception bmxEx)
+			{
+				string sMessage =  bmxEx.Message + bmxEx.StackTrace;
+				throw new BMXNetException(sMessage);
+			}
+		}
+
+//		public static string Piece(string[] sInput, string sDelim, int nNumber, int nEnd)
+//		{
+//			if (nEnd < nNumber)
+//				return "";
+//
+//
+//			if (nEnd == nNumber)
+//				return Piece(sInput, sDelim, nNumber);
+//
+//			char[] cDelim = sDelim.ToCharArray();
+//			int nLength = sInput.GetLength(0);
+//
+//			if ((nLength < nNumber)||(nNumber < 1))
+//				return "";
+//			
+//			if (nEnd > nLength)
+//				nEnd = nLength;
+//
+//			return string.Join(sDelim, sInput, nNumber - 1, nEnd - 1);
+//		}
+
+		#endregion Piece Functions
+
+		#region RPX Fields
+
+		private string	m_sWKID;
+		private string	m_sWISH;
+		private string	m_sPRCH;
+		private string	m_sWINH;
+		private string	m_cHDR;
+		private string	m_cVerify;
+		private string	m_cAccess;
+		private string	m_cDUZ;
+		private string	m_cAuthentication;
+		private string	m_cAppContext;
+		private bool	m_bConnected;
+		private int		m_nMServerPort;
+		private string	m_cServerAddress;
+		private string	m_cDUZ2;
+		private string	m_cLoginFacility;
+
+		#endregion RPX Fields
+
+		#region Encryption Keys
+		private string[] m_sKey = new string[]
+			{
+				@"wkEo-ZJt!dG)49K{nX1BS$vH<&:Myf*>Ae0jQW=;|#PsO`'%+rmb[gpqN,l6/hFC@DcUa ]z~R}""V\iIxu?872.(TYL5_3",
+				@"rKv`R;M/9BqAF%&tSs#Vh)dO1DZP> *fX'u[.4lY=-mg_ci802N7LTG<]!CWo:3?{+,5Q}(@jaExn$~p\IyHwzU""|k6Jeb",
+				@"\pV(ZJk""WQmCn!Y,y@1d+~8s?[lNMxgHEt=uw|X:qSLjAI*}6zoF{T3#;ca)/h5%`P4$r]G'9e2if_>UDKb7<v0&- RBO.",
+				@"depjt3g4W)qD0V~NJar\B ""?OYhcu[<Ms%Z`RIL_6:]AX-zG.#}$@vk7/5x&*m;(yb2Fn+l'PwUof1K{9,|EQi>H=CT8S!",
+				@"NZW:1}K$byP;jk)7'`x90B|cq@iSsEnu,(l-hf.&Y_?J#R]+voQXU8mrV[!p4tg~OMez CAaGFD6H53%L/dT2<*>""{\wI=",
+				@"vCiJ<oZ9|phXVNn)m K`t/SI%]A5qOWe\&?;jT~M!fz1l>[D_0xR32c*4.P""G{r7}E8wUgyudF+6-:B=$(sY,LkbHa#'@Q",
+				@"hvMX,'4Ty;[a8/{6l~F_V""}qLI\!@x(D7bRmUH]W15J%N0BYPkrs&9:$)Zj>u|zwQ=ieC-oGA.#?tfdcO3gp`S+En K2*<",
+				@"jd!W5[];4'<C$/&x|rZ(k{>?ghBzIFN}fAK""#`p_TqtD*1E37XGVs@0nmSe+Y6Qyo-aUu%i8c=H2vJ\) R:MLb.9,wlO~P",
+				@"2ThtjEM+!=xXb)7,ZV{*ci3""8@_l-HS69L>]\AUF/Q%:qD?1~m(yvO0e'<#o$p4dnIzKP|`NrkaGg.ufCRB[; sJYwW}5&",
+				@"vB\5/zl-9y:Pj|=(R'7QJI *&CTX""p0]_3.idcuOefVU#omwNZ`$Fs?L+1Sk<,b)hM4A6[Y%aDrg@~KqEW8t>H};n!2xG{",
+				@"sFz0Bo@_HfnK>LR}qWXV+D6`Y28=4Cm~G/7-5A\b9!a#rP.l&M$hc3ijQk;),TvUd<[:I""u1'NZSOw]*gxtE{eJp|y (?%",
+				@"M@,D}|LJyGO8`$*ZqH .j>c~h<d=fimszv[#-53F!+a;NC'6T91IV?(0x&/{B)w""]Q\YUWprk4:ol%g2nE7teRKbAPuS_X",
+				@".mjY#_0*H<B=Q+FML6]s;r2:e8R}[ic&KA 1w{)vV5d,$u""~xD/Pg?IyfthO@CzWp%!`N4Z'3-(o|J9XUE7k\TlqSb>anG",
+				@"xVa1']_GU<X`|\NgM?LS9{""jT%s$}y[nvtlefB2RKJW~(/cIDCPow4,>#zm+:5b@06O3Ap8=*7ZFY!H-uEQk; .q)i&rhd",
+				@"I]Jz7AG@QX.""%3Lq>METUo{Pp_ |a6<0dYVSv8:b)~W9NK`(r'4fs&wim\kReC2hg=HOj$1B*/nxt,;c#y+![?lFuZ-5D}",
+				@"Rr(Ge6F Hx>q$m&C%M~Tn,:""o'tX/*yP.{lZ!YkiVhuw_<KE5a[;}W0gjsz3]@7cI2\QN?f#4p|vb1OUBD9)=-LJA+d`S8",
+				@"I~k>y|m};d)-7DZ""Fe/Y<B:xwojR,Vh]O0Sc[`$sg8GXE!1&Qrzp._W%TNK(=J 3i*2abuHA4C'?Mv\Pq{n#56LftUl@9+",
+				@"~A*>9 WidFN,1KsmwQ)GJM{I4:C%}#Ep(?HB/r;t.&U8o|l['Lg""2hRDyZ5`nbf]qjc0!zS-TkYO<_=76a\X@$Pe3+xVvu",
+				@"yYgjf""5VdHc#uA,W1i+v'6|@pr{n;DJ!8(btPGaQM.LT3oe?NB/&9>Z`-}02*%x<7lsqz4OS ~E$\R]KI[:UwC_=h)kXmF",
+				@"5:iar.{YU7mBZR@-K|2 ""+~`M%8sq4JhPo<_X\Sg3WC;Tuxz,fvEQ1p9=w}FAI&j/keD0c?)LN6OHV]lGy'$*>nd[(tb!#",
+		};
+		#endregion Encryption Keys
+		
+
+		#region RPX Functions
+
+		/// <summary>
+		/// Given strInput = "13" builds "013" if nLength = 3.  Default for nLength is 3.
+		/// </summary>
+		/// <param name="strInput"></param>
+		/// <returns></returns>
+		private string ADEBLDPadString(string strInput)
+		{
+			return ADEBLDPadString(strInput, 3);
+		}
+
+		/// <summary>
+		/// Given strInput = "13" builds "013" if nLength = 3  Default for nLength is 3.
+		/// </summary>
+		/// <param name="strInput"></param>
+		/// <param name="nLength">Default = 3</param>
+		/// <returns></returns>
+		private string ADEBLDPadString(string strInput, int nLength /*=3*/)
+		{
+			return strInput.PadLeft(nLength, '0');
+		}
+
+		/// <summary>
+		/// Concatenates zero-padded length of sInput to sInput
+		/// Given "Hello" returns "004Hello"
+		/// If nSize = 5, returns "00004Hello"
+		/// Default for nSize is 3.
+		/// </summary>
+		/// <param name="sInput"></param>
+		/// <param name="nSize"></param>
+		/// <returns></returns>
+		private string ADEBLDB(string sInput)
+		{
+			return ADEBLDB(sInput, 3);
+		}
+
+		/// <summary>
+		/// Concatenates zero-padded length of sInput to sInput
+		/// Given "Hello" returns "004Hello"
+		/// If nSize = 5, returns "00004Hello"
+		/// Default for nSize is 3.
+		/// </summary>
+		/// <param name="sInput"></param>
+		/// <param name="nSize"></param>
+		/// <returns></returns>
+		private string ADEBLDB(string sInput, int nSize /*=3*/)
+		{
+			int nLen = sInput.Length;
+			string sLen = this.ADEBLDPadString(nLen.ToString(), nSize);
+			return sLen + sInput;
+		}
+
+		/// <summary>
+		/// Build protocol header
+		/// </summary>
+		/// <param name="sWKID"></param>
+		/// <param name="sWINH"></param>
+		/// <param name="sPRCH"></param>
+		/// <param name="sWISH"></param>
+		/// <returns></returns>
+		private string ADEBHDR(string sWKID, string sWINH, string sPRCH, string sWISH)
+		{
+			string strResult;
+			strResult = sWKID+";"+sWINH+";"+sPRCH+";"+sWISH+";";
+			strResult = ADEBLDB(strResult);
+			return strResult;
+		}
+
+		private string ADEBLDMsg(string cHDR, string cRPC, string cParam, string cMult)
+		{
+			//Builds RPC message
+			//Automatically splits parameters longer than 200 into subscripted array
+			string cMSG;
+			string sBuild = "";
+			string sPiece = "";
+			string sBig = "";
+			int l;
+			int nLength;
+
+			if (cParam == "") 
+			{
+				cMSG = "0" + cRPC ;
+			}
+			else
+			{
+				l = PieceLength(cParam, "^");
+				for (int j=1; j <= l; j++) 
+				{
+					sPiece = Piece(cParam, "^", j);
+					if ((j == l) && (sPiece.Length > 200)) 
+					{
+						//Split up long param into array pieces
+						sBig = sPiece;
+						sPiece = ".x";
+						nLength = sPiece.Length + 1;
+						sPiece = ADEBLDPadString(nLength.ToString()) + "2" + sPiece;
+						sBuild = sBuild + sPiece;
+						int nSubscript = 1;
+						string sSubscript ="";
+						int nSubLen = 0;
+						string sSubLen ="";
+						int nBigLen = sBig.Length;
+						string sHunk ="";
+						int nHunkLen = 0;
+						string sHunkLen ="";
+						do 
+						{
+							sHunk = sBig.Substring(0,200);
+							sBig = sBig.Substring(201, sBig.Length + 1);
+							nBigLen = sBig.Length;
+							sSubscript = nSubscript.ToString();
+							nSubLen = sSubscript.Length;
+							sSubLen = nSubLen.ToString();
+							sSubLen = ADEBLDPadString(sSubLen);
+							nHunkLen = sHunk.Length;
+							sHunkLen = nHunkLen.ToString();
+							sHunkLen = ADEBLDPadString(sHunkLen);
+							cMult = cMult + sSubLen + sSubscript + sHunkLen + sHunk;
+							nSubscript++;
+						} while (nBigLen > 0);
+					}
+					else
+					{
+						nLength = sPiece.Length +1;
+						sPiece = ADEBLDPadString(nLength.ToString()) + "0" + sPiece;
+						sBuild = sBuild + sPiece;
+					}
+				}
+				nLength = sBuild.Length;
+				string sTotLen = ADEBLDPadString(nLength.ToString(),5);
+				if (cMult.Length > 0) 
+				{
+					cMSG = "1"+ cRPC + "^" +sTotLen + sBuild;
+				}
+				else
+				{
+					cMSG = "0"+ cRPC + "^" +sTotLen + sBuild;
+				}
+			}
+			cMSG = ADEBLDB(cMSG, 5);
+			cMSG = cHDR + cMSG;
+			return cMSG;
+		}
+
+		private string ADEEncryp(string sInput)
+		{
+			//Encrypt a string
+			string strResult;
+			string strPercent;
+			string strAssoc;
+			string strIdix;
+			int nPercent;
+			int nAssocix;
+			int nIdix;
+			Debug.Assert(sInput != "");
+			System.Random rRand = new Random(DateTime.Now.Second);
+
+			nPercent = rRand.Next(0,10000);
+			nPercent += 72439;
+			nAssocix = nPercent % 20;
+			nAssocix++;
+			Debug.Assert(nAssocix < 21);
+			strPercent = nPercent.ToString();
+			strPercent = strPercent.Substring(1,2);
+			nIdix = Convert.ToInt32(strPercent);
+			nIdix = nIdix % 20;
+			nIdix++;
+			Debug.Assert(nIdix < 21);
+
+			const int nEncryptBase = 101;
+			strAssoc = LoadKey(nEncryptBase + nAssocix);
+			Debug.Assert(strAssoc.Length == 94);
+			strIdix = LoadKey(nEncryptBase + nIdix);
+			Debug.Assert(strIdix.Length == 94);
+			string sEncrypted = "";
+			
+			foreach (char c in sInput)
+			{
+				string d = c.ToString();
+				int nFindChar = FindChar(strIdix, c);
+				if (nFindChar > -1)
+				{
+					d = strAssoc.Substring(nFindChar,1);
+				}
+				sEncrypted += d;
+			}
+
+			strResult = (char) (nIdix + 31) + sEncrypted + (char) (nAssocix + 31);
+
+			return strResult;
+		}
+
+		private int FindChar(byte[] c, char y)
+		{
+			int n = 0;
+			int nRet = -1;
+			for (n=0; n < c.Length; n++)
+			{
+				if (y == (char) c[n])
+				{
+					nRet = n;
+					break;
+				}
+			}
+
+			return nRet;
+		}
+		
+		private int FindChar(string s, char y)
+		{
+			int n = 0;
+			int nRet = -1;
+			foreach (char c in s)
+			{
+				if (y == c)
+				{
+					nRet = n;
+					break;
+				}
+				n++;
+			}
+			return nRet;
+		}
+
+		private string LoadKey(int nID)
+		{
+			nID -= 102;
+			Debug.Assert( nID < 20);
+			return m_sKey[nID];
+		}
+
+		//		private string GetLocalAddress()
+		//		{
+		//			return "";
+		//		}
+	
+		public bool OpenConnection(string sServerAddress, string sAccess, string sVerify)
+		{
+			try
+			{
+				m_cServerAddress = sServerAddress;
+				m_cAccess = sAccess;
+				m_cVerify = sVerify;
+
+				//Get the local host address and available port;
+				IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+				if (ipHostInfo.AddressList.Length < 1)
+				{
+					throw new BMXNetException("BMXNetLib.OpenConnection unable to find IP Address.");
+				}
+
+				//Start the listener
+				IPAddress ipAddress = ipHostInfo.AddressList[0];
+				IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 0);
+				TcpListener listener = new TcpListener(localEndPoint);
+				listener.Start();
+				IPEndPoint ipEp = (IPEndPoint) listener.LocalEndpoint;
+				int nLocalPort = ipEp.Port;
+				string sLocalAddress = ipAddress.ToString();
+
+				//Connect with the server
+				TcpClient connector = new TcpClient();
+				try 
+				{
+					connector.Connect(m_cServerAddress, m_nMServerPort);
+				}
+				catch (SocketException exSocket)
+				{
+					string s = exSocket.Message + exSocket.StackTrace;
+					throw new BMXNetException(s);
+				}
+			
+				//Prepare & send the connect message
+				string cSend = "TCPconnect^" + sLocalAddress + "^" + nLocalPort.ToString() + "^";
+				int nLen = cSend.Length;
+				string sLen = nLen.ToString();
+				sLen = sLen.PadLeft(5, '0');
+				cSend = "{XWB}" + sLen + cSend;
+
+				NetworkStream ns = connector.GetStream();
+				byte[] sendBytes = Encoding.ASCII.GetBytes(cSend);
+				ns.Write(sendBytes,0,sendBytes.Length);
+
+				//Accept connection from server
+				DateTime dStartTime = DateTime.Now;
+				DateTime dEndTime;
+				bool bPending = false;
+				while (bPending == false)
+				{
+					if (listener.Pending() == true)
+					{
+						m_pCommSocket = listener.AcceptTcpClient();
+						bPending = true;
+						this.m_bConnected = true;
+						break;
+					}
+					dEndTime = DateTime.Now;
+					TimeSpan ds = dEndTime - dStartTime;
+					if (ds.TotalSeconds > 10) //TODO: Parameterize this timeout value
+					{
+						throw new Exception("AcceptTcpClient failed.");
+					}
+
+				}
+
+				try
+				{
+					bool bSecurity = SendSecurityRequest();
+				}
+				catch (Exception ex)
+				{
+					//Close the connection
+					SendString(m_pCommSocket, "#BYE#");
+					m_pCommSocket.Close();
+					m_bConnected = false;
+					m_cServerAddress = "";
+					throw ex;
+				}
+				
+				m_bConnected = true;
+
+//				if ( bSecurity != true) 
+//				{
+//					//Close the connection
+//					SendString(m_pCommSocket, "#BYE#");
+//					m_pCommSocket.Close();
+//					m_bConnected = false;
+//					m_cServerAddress = "";
+//				}
+//				else
+//				{
+//					m_bConnected = true;
+//				}
+				return m_bConnected;
+			}
+			catch (BMXNetException bmxEx)
+			{
+				throw bmxEx;
+			}
+			catch (Exception ex)
+			{
+				string s = ex.Message + ex.StackTrace;
+				throw new BMXNetException(s);
+			}
+
+		}
+
+		private void SendString(TcpClient tcpClient, string cSendString)
+		{
+			string sMult = "";
+			SendString(tcpClient, cSendString, sMult);
+		}
+
+		private void SendString(TcpClient tcpClient, string cSendString, string cMult)
+		{
+			int nLen = cSendString.Length;
+			string sLen = nLen.ToString();
+			sLen = sLen.PadLeft(5, '0');
+			cSendString = sLen + cSendString;
+
+			nLen += 15;
+			sLen = nLen.ToString();
+			sLen = sLen.PadLeft(5, '0');
+
+			cSendString = "{XWB}" + sLen + cSendString;
+			cSendString = cSendString + cMult;
+
+			NetworkStream ns = tcpClient.GetStream();
+			byte[] sendBytes = Encoding.ASCII.GetBytes(cSendString);
+			ns.Write(sendBytes,0,sendBytes.Length);
+
+			return;
+		}
+
+		private string ReceiveString(TcpClient tcpClient)
+		{
+			NetworkStream ns = tcpClient.GetStream();
+			do
+			{
+
+			}while (ns.DataAvailable == false);
+
+			byte[] bReadBuffer = new byte[1024];
+			string sReadBuffer = "";
+			StringBuilder sbAll = new StringBuilder("", 1024);
+			int numberOfBytesRead = 0;
+
+			// Incoming message may be larger than the buffer size.
+
+			numberOfBytesRead = ns.Read(bReadBuffer, 0, 2); //first two bytes are 0
+			bool bFinished = false;
+			int nFind = -1;
+			do
+			{
+				numberOfBytesRead = ns.Read(bReadBuffer, 0, bReadBuffer.Length); 
+				nFind = FindChar(bReadBuffer, (char) 4);
+				if (nFind > -1)
+					bFinished = true;
+
+				sReadBuffer = Encoding.ASCII.GetString(bReadBuffer, 0, numberOfBytesRead);
+				if (nFind > -1)
+				{
+					sbAll.Append(sReadBuffer, 0, numberOfBytesRead -1);
+				}
+				else 
+				{
+					sbAll.Append(sReadBuffer);
+				}
+			}
+			while(bFinished == false);
+			return sbAll.ToString();
+			
+		}
+
+		private bool SendSecurityRequest()
+		{
+			string		strReceive = "";
+			string		cAccess;
+			string		cVerify;
+
+			//Setup Signon Environment
+			string cMSG = this.ADEBLDB("0XUS SIGNON SETUP^00000", 5);
+			cMSG = m_cHDR + cMSG;
+			SendString(m_pCommSocket, cMSG);
+			strReceive = ReceiveString(m_pCommSocket);
+
+			cAccess = m_cAccess.ToUpper();
+			cVerify = m_cVerify.ToUpper();
+		
+			//Build AV Call
+			string strAV = cAccess + ";" + cVerify;
+			strAV = ADEEncryp(strAV);
+			cMSG = ADEBLDMsg(m_cHDR, "XUS AV CODE", strAV,"");
+			SendString(m_pCommSocket, cMSG);
+
+			strReceive = ReceiveString(m_pCommSocket);
+
+			char[] cDelim = {(char) 13,(char) 10,(char) 0};
+			m_cAuthentication = strReceive;
+			string sDelim = new string(cDelim);
+			int nPiece = 1;
+			m_cDUZ = Piece(m_cAuthentication, sDelim , nPiece);
+			if ((m_cDUZ == "0")||(m_cDUZ == ""))
+			{
+				m_cAccess = "";
+				m_cVerify = "";	
+				string sReason = Piece(m_cAuthentication, sDelim, 7);
+				throw new Exception(sReason);
+			}
+			m_cAccess = cAccess;
+			m_cVerify = cVerify;
+			
+			//Set up context
+			if (m_cAppContext == null)
+				m_cAppContext = "XUS SIGNON";
+
+			SendString(m_pCommSocket, ADEBLDMsg(m_cHDR, "XWB CREATE CONTEXT", ADEEncryp(m_cAppContext), ""));
+			m_cAuthentication = ReceiveString(m_pCommSocket);
+
+			return true;		
+		}
+
+		public void CloseConnection()
+		{
+			if (!m_bConnected) 
+			{
+				return;
+			}
+			SendString(m_pCommSocket, "#BYE#");
+			m_pCommSocket.Close();
+			m_bConnected = false;
+			m_cServerAddress = "";
+			m_cAuthentication = "";
+			m_cDUZ2 = "";
+			m_cAccess = "";
+			m_cVerify = "";
+			m_cDUZ = "";
+		}
+
+		public string TransmitRPC(string sRPC, string sParam)
+		{
+			if (m_bConnected == false) 
+			{
+				//Raise Exception
+				throw new BMXNetException("BMXNetLib.TransmitRPC failed because BMXNetLib is not connected to RPMS.");
+			}
+			Debug.Assert(m_cDUZ != "");
+			Debug.Assert(m_pCommSocket != null);
+
+			string sMult = "";
+			string sSend = ADEBLDMsg(m_cHDR, sRPC, sParam, sMult);
+			SendString(m_pCommSocket, sSend, sMult);
+			string strResult = ReceiveString(m_pCommSocket);
+			return strResult;
+		}
+
+		public string GetLoginFacility()
+		{
+			try
+			{
+				if (m_bConnected == false) 
+				{
+					throw new BMXNetException("BMXNetLib is not connected to RPMS");
+				}
+
+				if (m_cLoginFacility != "") 
+				{
+					return m_cLoginFacility;
+				}
+
+				Debug.Assert(m_pCommSocket != null);
+				Debug.Assert(m_cDUZ != "");
+				SendString(m_pCommSocket, ADEBLDMsg(m_cHDR, "BMXGetFac", m_cDUZ, ""));
+				string sFac = ReceiveString(m_pCommSocket);
+				m_cLoginFacility = sFac;
+				return sFac;
+			}
+			catch (BMXNetException bmxEx)
+			{
+				string sMessage =  bmxEx.Message + bmxEx.StackTrace;
+				throw new BMXNetException(sMessage);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		TcpClient m_pCommSocket;
+
+		#endregion RPX Functions
+
+		#region RPX Properties
+		
+		public string WKID
+		{
+			get
+			{
+				return m_sWKID;
+			}
+			set
+			{
+				m_sWKID = value;
+			}
+		}
+
+		public string PRCH
+		{
+			get
+			{
+				return m_sPRCH;
+			}
+			set
+			{
+				m_sPRCH = value;
+			}
+		}
+
+		public string WINH
+		{
+			get
+			{
+				return m_sWINH;
+			}
+			set
+			{
+				m_sWINH = value;
+			}
+		}
+
+		public string WISH
+		{
+			get
+			{
+				return m_sWISH;
+			}
+			set
+			{
+				m_sWISH = value;
+			}
+		}
+
+		public string AppContext
+		{
+			get
+			{
+				return m_cAppContext;
+			}
+			set
+			{
+				m_cAppContext = value;
+				//TODO: send the changed context to RPMS
+			}
+		}
+
+		public bool Connected
+		{
+			get
+			{
+				return m_bConnected;
+			}
+		}
+
+		public string DUZ
+		{
+			get
+			{
+				return m_cDUZ;
+			}
+		}
+
+//		public string Error
+//		{
+//			get
+//			{
+//				return "";
+//			}
+//		}
+
+		public string DUZ2
+		{
+			get
+			{
+				return m_cDUZ2;
+			}
+			set
+			{
+				m_cDUZ2 = value;
+				//TODO: send the changed context to RPMS
+			}
+		}
+
+		public string MServerAddress
+		{
+			get
+			{
+				return m_cServerAddress;
+			}
+		}
+
+		public int MServerPort
+		{
+			get
+			{
+				return m_nMServerPort;
+			}
+			set
+			{
+				m_nMServerPort = value;
+			}
+		}
+
+		#endregion RPX Properties
+
+
+
+
+
+
+	}
+}
