@@ -1112,7 +1112,7 @@ namespace IndianHealthService.BMXNet
 				// AV codes. You may then pass
 				// the values you collected to LoadConnectInfo(access,verify)
 				//
-				m_ci.LoadConnectInfo("","");
+				m_ci.LoadConnectInfo("172.16.17.31",9240,"","");
 
 				m_ci.AppContext = "BMXRPC";
 				txtContext.Text = m_ci.AppContext;
@@ -1331,7 +1331,6 @@ namespace IndianHealthService.BMXNet
 			//This is the 'Execute' button on the form and demonstrates
 			//how to use the BMXNet ADO.NET Data Provider to 
 			//retrieve an RPMS ADO.NET datatable.
-            MessageBox.Show("TEST");
             try
             {
                 if (m_ci.Connected == false)
