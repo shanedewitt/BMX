@@ -4,6 +4,188 @@
         <name>BMXNet20</name>
     </assembly>
     <members>
+        <member name="P:IndianHealthService.BMXNet.RPMSDb.ResultSets">
+            <summary>
+            Returns the array of RMPSResultSets retrieved from RPMS
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.RPMSDb.CurrentRecordSet">
+            <summary>
+            Sets and Returns the current recordset
+            </summary>
+        </member>
+        <member name="T:IndianHealthService.BMXNet.BMXNetConnectInfo">
+            <summary>
+            Contains methods and properties to support RPMS Login for .NET applications
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.SubscribeEvent(System.String)">
+            <summary>
+            Register interest in an RPMS event.
+            </summary>
+            <param name="EventName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.UnSubscribeEvent(System.String)">
+            <summary>
+            Unregister an RPMS event
+            </summary>
+            <param name="EventName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RaiseEvent(System.String,System.String,System.Boolean)">
+            <summary>
+             Raise an RPMS event
+            </summary>
+            <param name="EventName">The name of the event to raise</param>
+            <param name="Param">Parameters associated with the event</param>
+            <param name="RaiseBack">True if the event should be raised back to the caller</param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.Login">
+            <summary>
+            For backwards compatibility.  Internally calls LoadConnectInfo()
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.ChangeServerInfo">
+            <summary>
+            Change the internet address and port of the RPMS server
+            Throws a BMXNetException if user cancels
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo">
+            <summary>
+            Called to connect to an M server
+            Server address, port, Access and Verify codes will be
+            prompted for depending on whether these values are
+            cached.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32)">
+            <summary>
+            Called to connect to the M server specified by
+            server address and listener port.  The default namespace on the server will be used.
+            Access and Verify codes will be prompted if 
+            valid values for the current Windows Identity are
+            not cached on the server.
+            </summary>
+            <param name="MServerAddress">The IP address or name of the MServer</param>
+            <param name="Port">The port on which the BMXNet Monitor is listening</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String)">
+            <summary>
+            Called to connect to the M server specified by
+            server address, listener port and namespace.
+            Access and Verify codes will be prompted if 
+            valid values for the current Windows Identity are
+            not cached on the server.
+            </summary>
+            <param name="MServerAddress">The IP address or name of the MServer</param>
+            <param name="Port">The port on which the BMXNet Monitor is listening</param>
+            <param name="Namespace">The namespace in which the BMXNet application will run</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.String)">
+            <summary>
+            Called to connect to an M server
+            using specific Access and Verify codes.
+            Server address and port will be prompted if they
+            are not cached in local storage.
+            </summary>
+            <param name="AccessCode">The user's access code</param>
+            <param name="VerifyCode">The user's verify code</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Called to connect to a specific M server
+            using specific Access and Verify codes.
+            </summary>
+            <param name="AccessCode">The user's access code</param>
+            <param name="VerifyCode">The user's verify code</param>
+            <param name="MServerAddress">The IP address or name of the MServer</param>
+            <param name="Port">The port on which the BMXNet Monitor is listening</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Called to connect to a specific namespace on the M server
+            using specific Access and Verify codes.
+            </summary>
+            <param name="AccessCode">The user's access code</param>
+            <param name="VerifyCode">The user's verify code</param>
+            <param name="MServerAddress">The IP address or name of the MServer</param>
+            <param name="Port">The port on which the BMXNet Monitor is listening</param>
+            <param name="Namespace">The namespace in which the BMXNet application will run</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RPMSDataTable(System.String,System.String)">
+            <summary>
+            Creates and names a DataTable using the command in CommandString
+            and the name in TableName.
+            </summary>
+            <param name="CommandString"> The SQL or RPC call</param>
+            <param name="TableName">The name of the resulting table</param>
+            <returns>
+            Returns the resulting DataTable.
+            </returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RPMSDataTable(System.String,System.String,System.Data.DataSet)">
+            <summary>
+            Creates and names a DataTable using the command in CommandString
+            and the name in TableName then adds it to DataSet. 
+            </summary>
+            <param name="CommandString">The SQL or RPC call</param>
+            <param name="TableName">The name of the resulting table</param>
+            <param name="dsDataSet">The dataset in which to place the table</param>
+            <returns>
+            Returns the resulting DataTable.
+            </returns>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.EventPollingEnabled">
+            <summary>
+            Enables and disables event polling for the RPMS connection
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.EventPollingInterval">
+            <summary>
+            Sets and retrieves the interval in milliseconds for RPMS event polling
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.AutoFire">
+            <summary>
+            Sets and retrieves the number of times that the Event Timer will generage a BMXNet AutoFire event.
+            For example, if AutoFire == 3, then every 3rd time the Event Timer fires, it will generate an AutoFire event.
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.ReceiveTimeout">
+            <summary>
+            Set and retrieve the timeout, in milliseconds, to receive a response from the RPMS server.
+            If the retrieve time exceeds the timeout, an exception will be thrown and the connection will be closed.
+            The default is 30 seconds.
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.DUZ">
+            <summary>
+            Returns a string representation of DUZ
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.DUZ2">
+            <summary>
+            Sets and Returns DUZ(2)
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.MServerAddress">
+            <summary>
+            Gets the address of the  RPMS Server
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.MServerPort">
+            <summary>
+            Gets the port on which the MServer is connected
+            </summary>
+        </member>
+        <member name="T:IndianHealthService.BMXNet.BMXNetConnectInfo.ServerData">
+            <summary>
+            Serializes RPMS server address and port
+            </summary>
+        </member>
         <member name="T:IndianHealthService.BMXNet.DServerInfo">
             <summary>
             Prompts for RPMS Server address and port
@@ -189,21 +371,6 @@
             Throws an exception if unable to set the context. 
             </summary>
         </member>
-        <member name="T:IndianHealthService.BMXNet.BMXNetException">
-            <summary>
-            Custom exception class for BMXNet
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.RPMSDb.ResultSets">
-            <summary>
-            Returns the array of RMPSResultSets retrieved from RPMS
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.RPMSDb.CurrentRecordSet">
-            <summary>
-            Sets and Returns the current recordset
-            </summary>
-        </member>
         <member name="T:IndianHealthService.BMXNet.DLoginInfo">
             <summary>
             Summary description for DLoginInfo.
@@ -242,176 +409,9 @@
             Gets the verify code entered by the user.
             </summary>
         </member>
-        <member name="T:IndianHealthService.BMXNet.BMXNetConnectInfo">
+        <member name="T:IndianHealthService.BMXNet.BMXNetException">
             <summary>
-            Contains methods and properties to support RPMS Login for .NET applications
-            </summary>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.SubscribeEvent(System.String)">
-            <summary>
-            Register interest in an RPMS event.
-            </summary>
-            <param name="EventName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.UnSubscribeEvent(System.String)">
-            <summary>
-            Unregister an RPMS event
-            </summary>
-            <param name="EventName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RaiseEvent(System.String,System.String,System.Boolean)">
-            <summary>
-             Raise an RPMS event
-            </summary>
-            <param name="EventName">The name of the event to raise</param>
-            <param name="Param">Parameters associated with the event</param>
-            <param name="RaiseBack">True if the event should be raised back to the caller</param>
-            <returns></returns>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.Login">
-            <summary>
-            For backwards compatibility.  Internally calls LoadConnectInfo()
-            </summary>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.ChangeServerInfo">
-            <summary>
-            Change the internet address and port of the RPMS server
-            Throws a BMXNetException if user cancels
-            </summary>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo">
-            <summary>
-            Called to connect to an M server
-            Server address, port, Access and Verify codes will be
-            prompted for depending on whether these values are
-            cached.
-            </summary>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32)">
-            <summary>
-            Called to connect to the M server specified by
-            server address and listener port.  The default namespace on the server will be used.
-            Access and Verify codes will be prompted if 
-            valid values for the current Windows Identity are
-            not cached on the server.
-            </summary>
-            <param name="MServerAddress">The IP address or name of the MServer</param>
-            <param name="Port">The port on which the BMXNet Monitor is listening</param>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String)">
-            <summary>
-            Called to connect to the M server specified by
-            server address, listener port and namespace.
-            Access and Verify codes will be prompted if 
-            valid values for the current Windows Identity are
-            not cached on the server.
-            </summary>
-            <param name="MServerAddress">The IP address or name of the MServer</param>
-            <param name="Port">The port on which the BMXNet Monitor is listening</param>
-            <param name="Namespace">The namespace in which the BMXNet application will run</param>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.String)">
-            <summary>
-            Called to connect to an M server
-            using specific Access and Verify codes.
-            Server address and port will be prompted if they
-            are not cached in local storage.
-            </summary>
-            <param name="AccessCode">The user's access code</param>
-            <param name="VerifyCode">The user's verify code</param>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String,System.String)">
-            <summary>
-            Called to connect to a specific M server
-            using specific Access and Verify codes.
-            </summary>
-            <param name="AccessCode">The user's access code</param>
-            <param name="VerifyCode">The user's verify code</param>
-            <param name="MServerAddress">The IP address or name of the MServer</param>
-            <param name="Port">The port on which the BMXNet Monitor is listening</param>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String,System.String,System.String)">
-            <summary>
-            Called to connect to a specific namespace on the M server
-            using specific Access and Verify codes.
-            </summary>
-            <param name="AccessCode">The user's access code</param>
-            <param name="VerifyCode">The user's verify code</param>
-            <param name="MServerAddress">The IP address or name of the MServer</param>
-            <param name="Port">The port on which the BMXNet Monitor is listening</param>
-            <param name="Namespace">The namespace in which the BMXNet application will run</param>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RPMSDataTable(System.String,System.String)">
-            <summary>
-            Creates and names a DataTable using the command in CommandString
-            and the name in TableName.
-            </summary>
-            <param name="CommandString"> The SQL or RPC call</param>
-            <param name="TableName">The name of the resulting table</param>
-            <returns>
-            Returns the resulting DataTable.
-            </returns>
-        </member>
-        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RPMSDataTable(System.String,System.String,System.Data.DataSet)">
-            <summary>
-            Creates and names a DataTable using the command in CommandString
-            and the name in TableName then adds it to DataSet. 
-            </summary>
-            <param name="CommandString">The SQL or RPC call</param>
-            <param name="TableName">The name of the resulting table</param>
-            <param name="dsDataSet">The dataset in which to place the table</param>
-            <returns>
-            Returns the resulting DataTable.
-            </returns>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.EventPollingEnabled">
-            <summary>
-            Enables and disables event polling for the RPMS connection
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.EventPollingInterval">
-            <summary>
-            Sets and retrieves the interval in milliseconds for RPMS event polling
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.AutoFire">
-            <summary>
-            Sets and retrieves the number of times that the Event Timer will generage a BMXNet AutoFire event.
-            For example, if AutoFire == 3, then every 3rd time the Event Timer fires, it will generate an AutoFire event.
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.ReceiveTimeout">
-            <summary>
-            Set and retrieve the timeout, in milliseconds, to receive a response from the RPMS server.
-            If the retrieve time exceeds the timeout, an exception will be thrown and the connection will be closed.
-            The default is 30 seconds.
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.DUZ">
-            <summary>
-            Returns a string representation of DUZ
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.DUZ2">
-            <summary>
-            Sets and Returns DUZ(2)
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.MServerAddress">
-            <summary>
-            Gets the address of the  RPMS Server
-            </summary>
-        </member>
-        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.MServerPort">
-            <summary>
-            Gets the port on which the MServer is connected
-            </summary>
-        </member>
-        <member name="T:IndianHealthService.BMXNet.BMXNetConnectInfo.ServerData">
-            <summary>
-            Serializes RPMS server address and port
+            Custom exception class for BMXNet
             </summary>
         </member>
     </members>

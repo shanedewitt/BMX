@@ -1112,7 +1112,7 @@ namespace IndianHealthService.BMXNet
 				// AV codes. You may then pass
 				// the values you collected to LoadConnectInfo(access,verify)
 				//
-				m_ci.LoadConnectInfo("172.16.17.31",9240,"","");
+				m_ci.LoadConnectInfo("192.168.1.103",9260,"","");
 
 				m_ci.AppContext = "BMXRPC";
 				txtContext.Text = m_ci.AppContext;

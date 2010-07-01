@@ -1066,10 +1066,17 @@ namespace IndianHealthService.BMXNet
 					string sMult = "";
 					string sSend = ADEBLDMsg(m_cHDR, sRPC, sParam, ref sMult);
 					SendString(m_pCommSocket, sSend, sMult);
-					//					Debug.Write("TransmitRPC Sent: " + sSend + "\n");
-					string strResult = ReceiveString(m_pCommSocket);
-					//					Debug.Write("TransmitRPC Received: " + strResult + "\n");
-
+#if DEBUG   
+                    DateTime sendTime = DateTime.Now;
+                    Debug.Write("TransmitRPC Sent: " + sSend + "\n");
+#endif
+                    string strResult = ReceiveString(m_pCommSocket);
+#if DEBUG
+                    DateTime receiveTime = DateTime.Now;
+                    Debug.Write("TransmitRPC Received: " + strResult + "\n");
+                    TimeSpan executionTime = receiveTime - sendTime;
+                    Debug.Write("Execution Time: " + executionTime.Milliseconds + " ms.\n");
+#endif
 					if (sOldAppContext != "")
 					{
 						this.AppContext = sOldAppContext;
