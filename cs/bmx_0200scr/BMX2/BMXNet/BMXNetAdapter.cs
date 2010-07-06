@@ -76,9 +76,7 @@ namespace IndianHealthService.BMXNet
 		 * Implement abstract methods inherited from DbDataAdapter.
 		 */
 
-		public override int Fill(
-			DataSet ds
-			)
+		public override int Fill(DataSet ds)
 		{
 			//The inital call to base.fill calls the RPC which loads up the array
 			//After base.fill returns, create a datareader

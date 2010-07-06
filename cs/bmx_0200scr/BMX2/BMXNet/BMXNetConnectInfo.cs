@@ -56,16 +56,27 @@ namespace IndianHealthService.BMXNet
 			}
         }
 
-		public BMXNetConnectInfo()
-		{
-			m_BMXNetLib = new BMXNetLib();
+        /// <summary>
+        /// BMXNetConnector With Default Encoding (invokes BMXNetLib)
+        /// </summary>
+        public BMXNetConnectInfo() : this("") { }
 
-			//Initialize BMXNetEvent timer
-			m_timerEvent = new System.Timers.Timer();
-			m_timerEvent.Elapsed+=new ElapsedEventHandler(OnEventTimer);
-			m_timerEvent.Interval = 10000;
-			m_timerEvent.Enabled = false;
-		}
+        /// <summary>
+        /// BMXNetConnector with a specific encoding
+        /// </summary>
+        /// <param name="encoding">String representation of encoding (e.g. windows-1256 for arabic).
+        /// If encoding is not found, we fall back to the default windows encoding. A debug message
+        /// is printed to that effect.</param>
+        public BMXNetConnectInfo(string encoding)
+        {
+            if (encoding == String.Empty) m_BMXNetLib = new BMXNetLib();
+            else m_BMXNetLib = new BMXNetLib(encoding);
+
+            m_timerEvent = new System.Timers.Timer();
+            m_timerEvent.Elapsed += new ElapsedEventHandler(OnEventTimer);
+            m_timerEvent.Interval = 10000;
+            m_timerEvent.Enabled = false;
+        }
 
 		#region BMXNetEvent
 

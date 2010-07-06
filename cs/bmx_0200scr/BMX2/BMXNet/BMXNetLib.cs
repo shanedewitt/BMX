@@ -20,7 +20,10 @@ namespace IndianHealthService.BMXNet
 	[DnsPermission(SecurityAction.Assert, Unrestricted = true)]
 	public class BMXNetLib
 	{
-		public BMXNetLib()
+		/// <summary>
+		/// Main constructor with default machine encoding
+		/// </summary>
+        public BMXNetLib()
 		{
 			m_sWKID = "BMX";
 			m_sWINH = "";
@@ -29,6 +32,32 @@ namespace IndianHealthService.BMXNet
 			m_cHDR = ADEBHDR(m_sWKID,m_sWINH,m_sPRCH,m_sWISH);
 
 		}
+
+        /// <summary>
+        /// Constructor specifiying encoding
+        /// </summary>
+        /// <param name="charset">String name of character set</param>
+        public BMXNetLib(string charset) : this()
+        {
+            
+            //char[] arabic_nm_ch = arabic_name.ToCharArray();
+            //byte[] arabic_nm_by = cp1256.GetBytes(arabic_nm_ch);
+            //string arabic_name2 = "";
+            //foreach (byte eachbyte in arabic_nm_by)
+            //{
+            //    arabic_name2 += ((char)eachbyte);
+            //}
+            
+            try 
+            { 
+                m_Encoding = System.Text.Encoding.GetEncoding(charset); 
+            }
+            catch (ArgumentException)
+            {
+                Debug.Write("Invalid Code Page... Falling back to default system encoding");
+                m_Encoding = Encoding.GetEncoding(0);
+            }
+        }
 		
 		#region Piece Functions
 
@@ -138,6 +167,8 @@ namespace IndianHealthService.BMXNet
 		private TcpClient	m_pCommSocket;
 		private	string		m_sNameSpace = "";
         private int         m_nReceiveTimeout = 30000;
+
+        private Encoding m_Encoding = Encoding.GetEncoding(0);
 
 		#endregion RPX Fields
 
@@ -801,7 +832,7 @@ namespace IndianHealthService.BMXNet
 			cSendString = cSendString + cMult;
 
 			NetworkStream ns = tcpClient.GetStream();
-			byte[] sendBytes = Encoding.ASCII.GetBytes(cSendString);
+			byte[] sendBytes = m_Encoding.GetBytes(cSendString);
 			ns.Write(sendBytes,0,sendBytes.Length);
             if (this.m_bLogging == true)
             {
@@ -851,7 +882,6 @@ namespace IndianHealthService.BMXNet
 			string sAppError = "";
 			do
 			{
-
 				numberOfBytesRead = ns.Read(bReadBuffer, 0, bReadBuffer.Length); 
 				if ((numberOfBytesRead == 1)&&(bStarted == false))
 				{
@@ -868,12 +898,12 @@ namespace IndianHealthService.BMXNet
 					{ //special case: M error trap invoked in SND^XWBTCPC
 						lpBuf += 2;
 					}
-					sError = Encoding.ASCII.GetString(bReadBuffer, lpBuf + 1, nErrLen);
+					sError = m_Encoding.GetString(bReadBuffer, lpBuf + 1, nErrLen);
 					if (sError != "")
 					{
 						throw new BMXNetException(sError);
 					}
-					sAppError = Encoding.ASCII.GetString(bReadBuffer, lpBuf+1+nErrLen+1, nAppLen);
+					sAppError = m_Encoding.GetString(bReadBuffer, lpBuf+1+nErrLen+1, nAppLen);
 					lpBuf += (nErrLen + nAppLen + 2);
 					numberOfBytesRead -= (nErrLen + nAppLen + 2);
 					bStarted = true;
@@ -883,7 +913,7 @@ namespace IndianHealthService.BMXNet
 				if (nFind > -1)
 					bFinished = true;
 				Debug.Assert(numberOfBytesRead > -1);
-				sReadBuffer = Encoding.ASCII.GetString(bReadBuffer, lpBuf, numberOfBytesRead);
+				sReadBuffer = m_Encoding.GetString(bReadBuffer, lpBuf, numberOfBytesRead);
 				lpBuf = 0;
 				if (nFind > -1)
 				{
@@ -1313,6 +1343,21 @@ namespace IndianHealthService.BMXNet
 				m_sNameSpace = value;
 			}
 		}
+
+        /// <summary>
+        /// Gets or Sets the Default Encoder to use
+        /// </summary>
+        public Encoding Encoder
+        {
+            get
+            {
+                return this.m_Encoding;
+            }
+            set
+            {
+                this.m_Encoding = Encoder;
+            }
+        }
 
 		#endregion RPX Properties
 

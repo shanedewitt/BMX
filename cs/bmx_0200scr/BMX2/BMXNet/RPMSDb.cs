@@ -164,16 +164,21 @@ namespace IndianHealthService.BMXNet
 				int nMaxSize;
 				Type tType;
 
-				int nTemp = 10;
+				int nTemp = 10; //length of @@@meta@@@
+                //actual header
 				sHeader = sHeader.Substring(10,(sHeader.Length - nTemp));
 				string[] sRecordSetInfo = sHeader.Split(cFldDelim);
 
+                //substract one because 1st item is RecordId|File# -- rest is columns
 				numCols = sRecordSetInfo.GetLength(0)-1;
 				m_aResultSets[nSet].metaData = new RPMSDbResultSet.MetaData[numCols];
 
-				//First ^-Piece is recordset-level info: RecordIdentifier|File#
+				//Set FileID
+                //First ^-Piece is recordset-level info: RecordIdentifier|File#
 				string[] sRecordInfo = sRecordSetInfo[0].Split(cBar);
 				m_aResultSets[nSet].fmFileID = sRecordInfo[1];
+
+                //What is the seed???
 				if (sRecordInfo.GetLength(0) > 2)
 				{
 					sSeed = sRecordInfo[2];
@@ -189,6 +194,7 @@ namespace IndianHealthService.BMXNet
 					}
 				}
 
+                // Foreign key is included
 				if (sRecordInfo.GetLength(0) > 3)
 				{
 					m_aResultSets[nSet].fmForeignKey = sRecordInfo[4];
@@ -196,7 +202,7 @@ namespace IndianHealthService.BMXNet
 				}
 
 					m_aResultSets[nSet].fmKeyField = "";
-				//2nd through nth ^-Pieces are Column info: Fileman File#FileMan Field#|DataType|Field Length|Column Name|IsReadOnly|IsKeyField
+				//2nd through nth ^-Pieces are Column info: Fileman File#|FileMan Field#|DataType|Field Length|Column Name|IsReadOnly|IsKeyField|????
 				for (j=1; j < sRecordSetInfo.GetLength(0); j++)
 				{
 					string[] sColumnInfo = sRecordSetInfo[j].Split(cBar);
@@ -207,6 +213,7 @@ namespace IndianHealthService.BMXNet
 					//Field 4 = ColumnName
 					//Field 5 = IsReadOnly
 					//Field 6 = IsKeyField
+                    //Field 7 {MISSING}
 					sFileID = sColumnInfo[0];
 					string sFieldID = sColumnInfo[1];
 
@@ -301,6 +308,7 @@ namespace IndianHealthService.BMXNet
 
 			string sFldDelim = "^";
 			char[] cFldDelim = sFldDelim.ToCharArray();
+            // nRecords-1 because last record is empty (Where $C(31) (end of record) is)
 			m_aResultSets[nSet].data = new object[nRecords-1, numCols];
 			string[] saRecord;
 			int j;
@@ -309,6 +317,8 @@ namespace IndianHealthService.BMXNet
 				saRecord = sResultArray[j].Split(cFldDelim);
 				for (int k = 0; k< saRecord.GetLength(0); k++)
 				{
+                    //Date Time validation
+                    //TODO: Support Fileman DateTime
 					if (m_aResultSets[nSet].metaData[k].type == typeof(DateTime))
 					{
 						if (saRecord[k] == "")
@@ -384,7 +394,9 @@ namespace IndianHealthService.BMXNet
 			int[]	naHeaderIndex;		//Location (index) of header records in sResultArray
 			int		nRecordSetCount;	//Count of recordsets
 
+            //Gets Records[sets] (val is number of records for each set), Headers[sets] (val is header location in array), and number of record sets.
 			IndexRecords(sResultArray, out naRecords, out naHeaderIndex, out nRecordSetCount);
+            //Create array of result sets
 			m_aResultSets = new RPMSDbResultSet[nRecordSetCount];
 
 			for (int nSet = 0; nSet < nRecordSetCount; nSet++)

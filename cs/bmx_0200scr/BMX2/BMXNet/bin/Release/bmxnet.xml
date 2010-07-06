@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>BMXNet20</name>
+        <name>BMXNet21</name>
     </assembly>
     <members>
         <member name="T:IndianHealthService.BMXNet.DServerInfo">
@@ -81,6 +81,17 @@
             The VA RPC Broker must be running on the RPMS server in order for 
             BMXNetLib to connect.
             </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.#ctor">
+            <summary>
+            Main constructor with default machine encoding
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.#ctor(System.String)">
+            <summary>
+            Constructor specifiying encoding
+            </summary>
+            <param name="charset">String name of character set</param>
         </member>
         <member name="M:IndianHealthService.BMXNet.BMXNetLib.PieceLength(System.String,System.String)">
             <summary>
@@ -189,6 +200,11 @@
             Throws an exception if unable to set the context. 
             </summary>
         </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetLib.Encoder">
+            <summary>
+            Gets or Sets the Default Encoder to use
+            </summary>
+        </member>
         <member name="T:IndianHealthService.BMXNet.BMXNetException">
             <summary>
             Custom exception class for BMXNet
@@ -246,6 +262,19 @@
             <summary>
             Contains methods and properties to support RPMS Login for .NET applications
             </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.#ctor">
+            <summary>
+            BMXNetConnector With Default Encoding (invokes BMXNetLib)
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.#ctor(System.String)">
+            <summary>
+            BMXNetConnector with a specific encoding
+            </summary>
+            <param name="encoding">String representation of encoding (e.g. windows-1256 for arabic).
+            If encoding is not found, we fall back to the default windows encoding. A debug message
+            is printed to that effect.</param>
         </member>
         <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.SubscribeEvent(System.String)">
             <summary>

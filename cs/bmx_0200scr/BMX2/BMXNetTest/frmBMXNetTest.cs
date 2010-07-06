@@ -52,7 +52,7 @@ namespace IndianHealthService.BMXNet
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.mlTests = new System.Windows.Forms.TabControl();
             this.tpaQuery = new System.Windows.Forms.TabPage();
             this.panGrid = new System.Windows.Forms.Panel();
             this.dataGrid2 = new System.Windows.Forms.DataGrid();
@@ -134,7 +134,11 @@ namespace IndianHealthService.BMXNet
             this.cmdAcquireLock = new System.Windows.Forms.Button();
             this.cmdReleaseLock = new System.Windows.Forms.Button();
             this.cmdEventPollingInterval = new System.Windows.Forms.Button();
-            this.tabControl1.SuspendLayout();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.txtML = new System.Windows.Forms.TextBox();
+            this.lblML = new System.Windows.Forms.Label();
+            this.btnML = new System.Windows.Forms.Button();
+            this.mlTests.SuspendLayout();
             this.tpaQuery.SuspendLayout();
             this.panGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid2)).BeginInit();
@@ -146,20 +150,22 @@ namespace IndianHealthService.BMXNet
             ((System.ComponentModel.ISupportInitialize)(this.grdAsyncResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudEventPollingInterval)).BeginInit();
             this.grpPiece.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tabControl1
+            // mlTests
             // 
-            this.tabControl1.Controls.Add(this.tpaQuery);
-            this.tabControl1.Controls.Add(this.tpaControls);
-            this.tabControl1.Controls.Add(this.tpaConnection);
-            this.tabControl1.Controls.Add(this.tpaOther);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(736, 566);
-            this.tabControl1.TabIndex = 0;
+            this.mlTests.Controls.Add(this.tpaQuery);
+            this.mlTests.Controls.Add(this.tpaControls);
+            this.mlTests.Controls.Add(this.tpaConnection);
+            this.mlTests.Controls.Add(this.tpaOther);
+            this.mlTests.Controls.Add(this.tabPage1);
+            this.mlTests.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mlTests.Location = new System.Drawing.Point(0, 0);
+            this.mlTests.Name = "mlTests";
+            this.mlTests.SelectedIndex = 0;
+            this.mlTests.Size = new System.Drawing.Size(736, 566);
+            this.mlTests.TabIndex = 0;
             // 
             // tpaQuery
             // 
@@ -494,7 +500,7 @@ namespace IndianHealthService.BMXNet
             this.tpaConnection.Controls.Add(this.cmdChangeServer);
             this.tpaConnection.Location = new System.Drawing.Point(4, 22);
             this.tpaConnection.Name = "tpaConnection";
-            this.tpaConnection.Size = new System.Drawing.Size(605, 465);
+            this.tpaConnection.Size = new System.Drawing.Size(728, 540);
             this.tpaConnection.TabIndex = 1;
             this.tpaConnection.Text = "Connection";
             // 
@@ -634,7 +640,7 @@ namespace IndianHealthService.BMXNet
             this.tpaOther.Controls.Add(this.cmdEventPollingInterval);
             this.tpaOther.Location = new System.Drawing.Point(4, 22);
             this.tpaOther.Name = "tpaOther";
-            this.tpaOther.Size = new System.Drawing.Size(605, 465);
+            this.tpaOther.Size = new System.Drawing.Size(728, 540);
             this.tpaOther.TabIndex = 2;
             this.tpaOther.Text = "Events";
             // 
@@ -946,16 +952,55 @@ namespace IndianHealthService.BMXNet
             this.cmdEventPollingInterval.TabIndex = 93;
             this.cmdEventPollingInterval.Text = "Event Polling Interval";
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.btnML);
+            this.tabPage1.Controls.Add(this.lblML);
+            this.tabPage1.Controls.Add(this.txtML);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(728, 540);
+            this.tabPage1.TabIndex = 4;
+            this.tabPage1.Text = "Multi Lingual Tests";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // txtML
+            // 
+            this.txtML.Location = new System.Drawing.Point(177, 66);
+            this.txtML.Name = "txtML";
+            this.txtML.Size = new System.Drawing.Size(100, 20);
+            this.txtML.TabIndex = 0;
+            // 
+            // lblML
+            // 
+            this.lblML.AutoSize = true;
+            this.lblML.Location = new System.Drawing.Point(51, 66);
+            this.lblML.Name = "lblML";
+            this.lblML.Size = new System.Drawing.Size(110, 13);
+            this.lblML.TabIndex = 1;
+            this.lblML.Text = "Type Something Here";
+            // 
+            // btnML
+            // 
+            this.btnML.Location = new System.Drawing.Point(132, 112);
+            this.btnML.Name = "btnML";
+            this.btnML.Size = new System.Drawing.Size(75, 23);
+            this.btnML.TabIndex = 2;
+            this.btnML.Text = "Store Data";
+            this.btnML.UseVisualStyleBackColor = true;
+            this.btnML.Click += new System.EventHandler(this.btnML_Click);
+            // 
             // frmBMXNetTest
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(736, 566);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.mlTests);
             this.Name = "frmBMXNetTest";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BMXNet Test Application";
             this.Load += new System.EventHandler(this.frmBMXNetTest_Load);
-            this.tabControl1.ResumeLayout(false);
+            this.mlTests.ResumeLayout(false);
             this.tpaQuery.ResumeLayout(false);
             this.panGrid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid2)).EndInit();
@@ -972,6 +1017,8 @@ namespace IndianHealthService.BMXNet
             ((System.ComponentModel.ISupportInitialize)(this.nudEventPollingInterval)).EndInit();
             this.grpPiece.ResumeLayout(false);
             this.grpPiece.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -997,7 +1044,7 @@ namespace IndianHealthService.BMXNet
 		}
 
 		private BMXNetConnectInfo m_ci;
-		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabControl mlTests;
 		private System.Windows.Forms.DataGrid dataGrid2;
 		private System.Windows.Forms.Button cmdCancelChanges;
 		private System.Windows.Forms.TextBox txtCommand;
@@ -1079,6 +1126,10 @@ namespace IndianHealthService.BMXNet
         private Button cmdTestReceiveTimeout;
         private Button cmdStopLogging;
         private Button cmdStartLogging;
+        private TabPage tabPage1;
+        private Button btnML;
+        private Label lblML;
+        private TextBox txtML;
 		BMXNetDataAdapter m_da = new BMXNetDataAdapter();
 
 
@@ -1923,6 +1974,13 @@ namespace IndianHealthService.BMXNet
             {
                 MessageBox.Show("Unable to stop logging:  " + ex.Message);
             }
+        }
+
+        private void btnML_Click(object sender, EventArgs e)
+        {
+            string cmd = "KBAN BMX";
+            string result = m_ci.bmxNetLib.TransmitRPC(cmd, txtML.Text);
+            MessageBox.Show("What got sent and back is:" + result);
         }
 
 
