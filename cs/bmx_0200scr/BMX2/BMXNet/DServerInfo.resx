@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="lblDescriptionResourceGroup.Text" xml:space="preserve">
-    <value>Use this panel to specify the internet address and port of the RPMS server.  The RPMS Server Port refers to the IP Port to which the VA RPC Broker is assigned on the RPMS Server.  You may optionally specify the namespace (UCI) in which the applicaiton will run.</value>
+    <value>Use this panel to specify the internet address and port of the VISTA server.  The VISTA Server Port refers to the IP Port to which the VA RPC Broker is assigned on the VISTA Server.  You may optionally specify the namespace (UCI) in which the applicaiton will run.</value>
   </data>
 </root>

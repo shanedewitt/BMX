@@ -145,7 +145,7 @@ namespace IndianHealthService.BMXNet
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(128, 16);
             this.label1.TabIndex = 7;
-            this.label1.Text = "RPMS Server Address:";
+            this.label1.Text = "VISTA Server Address:";
             // 
             // label2
             // 
@@ -200,7 +200,7 @@ namespace IndianHealthService.BMXNet
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "DServerInfo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "RPMS Server Address";
+            this.Text = "VISTA Server Address";
             this.Load += new System.EventHandler(this.DServerInfo_Load);
             this.pnlPageBottom.ResumeLayout(false);
             this.pnlDescription.ResumeLayout(false);
