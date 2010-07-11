@@ -1096,14 +1096,14 @@ namespace IndianHealthService.BMXNet
 					string sMult = "";
 					string sSend = ADEBLDMsg(m_cHDR, sRPC, sParam, ref sMult);
 					SendString(m_pCommSocket, sSend, sMult);
-#if DEBUG   
+#if TRACE   
                     DateTime sendTime = DateTime.Now;
-                    Debug.Write("TransmitRPC Sent: " + sSend + "\n");
+                    Debug.Write("TransmitRPC Sent: " + sSend.Replace((char) 30, (char) 10) + "\n");
 #endif
                     string strResult = ReceiveString(m_pCommSocket);
-#if DEBUG
+#if TRACE
                     DateTime receiveTime = DateTime.Now;
-                    Debug.Write("TransmitRPC Received: " + strResult + "\n");
+                    Debug.Write("TransmitRPC Received: " + strResult.Replace((char) 30, (char) 10) + "\n");
                     TimeSpan executionTime = receiveTime - sendTime;
                     Debug.Write("Execution Time: " + executionTime.Milliseconds + " ms.\n");
 #endif
