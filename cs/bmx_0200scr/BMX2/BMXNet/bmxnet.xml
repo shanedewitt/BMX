@@ -1,0 +1,447 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BMXNet21</name>
+    </assembly>
+    <members>
+        <member name="T:IndianHealthService.BMXNet.DServerInfo">
+            <summary>
+            Prompts for RPMS Server address and port
+            Obtains current values, if any, from isolated storage
+            and uses them as defaults.
+            If OK, then writes values to isolated storage and returns
+            Address and Port as properties.
+            
+            </summary>
+        </member>
+        <member name="F:IndianHealthService.BMXNet.DServerInfo.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DServerInfo.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DServerInfo.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DServerInfo.UpdateDialogData(System.Boolean)">
+            <summary>
+            If b is true, moves member vars into control data
+            otherwise, moves control data into member vars
+            </summary>
+            <param name="b"></param>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.DServerInfo.MServerAddress">
+            <summary>
+            Gets/sets the internet address of the RPMS Server
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.DServerInfo.MServerNamespace">
+            <summary>
+            Gets/sets the namespace of the RPMS Server
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.DServerInfo.MServerPort">
+            <summary>
+            Gets/sets the TCP/IP Port of the RPMS Server
+            </summary>
+        </member>
+        <member name="T:IndianHealthService.BMXNet.DSelectDivision">
+            <summary>
+            Summary description for DSelectDivision.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DSelectDivision.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DSelectDivision.UpdateDialogData(System.Boolean)">
+            <summary>
+            If b is true, moves member vars into control data
+            otherwise, moves control data into member vars
+            </summary>
+            <param name="b"></param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DSelectDivision.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="T:IndianHealthService.BMXNet.BMXNetLib">
+            <summary>
+            BMXNetLib implements low-level socket connectivity to RPMS databases.
+            The VA RPC Broker must be running on the RPMS server in order for 
+            BMXNetLib to connect.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.#ctor">
+            <summary>
+            Main constructor with default machine encoding
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.#ctor(System.String)">
+            <summary>
+            Constructor specifiying encoding
+            </summary>
+            <param name="charset">String name of character set</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.PieceLength(System.String,System.String)">
+            <summary>
+            Corresponds to M's $L(STRING,DELIMITER)
+            </summary>
+            <param name="sInput"></param>
+            <param name="sDelim"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.Piece(System.String,System.String,System.Int32)">
+            <summary>
+            Corresponds to M's $$Piece function
+            </summary>
+            <param name="sInput"></param>
+            <param name="sDelim"></param>
+            <param name="nNumber"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.ADEBLDPadString(System.String)">
+            <summary>
+            Given strInput = "13" builds "013" if nLength = 3.  Default for nLength is 3.
+            </summary>
+            <param name="strInput"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.ADEBLDPadString(System.String,System.Int32)">
+            <summary>
+            Given strInput = "13" builds "013" if nLength = 3  Default for nLength is 3.
+            </summary>
+            <param name="strInput"></param>
+            <param name="nLength">Default = 3</param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.ADEBLDB(System.String)">
+            <summary>
+            Concatenates zero-padded length of sInput to sInput
+            Given "Hello" returns "004Hello"
+            If nSize = 5, returns "00004Hello"
+            Default for nSize is 3.
+            </summary>
+            <param name="sInput"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.ADEBLDB(System.String,System.Int32)">
+            <summary>
+            Concatenates zero-padded length of sInput to sInput
+            Given "Hello" returns "004Hello"
+            If nSize = 5, returns "00004Hello"
+            Default for nSize is 3.
+            </summary>
+            <param name="sInput"></param>
+            <param name="nSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.ADEBHDR(System.String,System.String,System.String,System.String)">
+            <summary>
+            Build protocol header
+            </summary>
+            <param name="sWKID"></param>
+            <param name="sWINH"></param>
+            <param name="sPRCH"></param>
+            <param name="sWISH"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.FindSubString(System.String,System.String)">
+            <summary>
+            Returns index of first instance of sSubString in sString.
+            If sSubString not found, returns -1.
+            </summary>
+            <param name="sString"></param>
+            <param name="sSubString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetLib.Lock(System.String,System.String,System.String)">
+            <summary>
+            Lock a local or global M variable
+            Returns true if lock is obtained during TimeOut seconds
+            Use + to increment, - to decrement lock.
+            </summary>
+            <param name="Variable"></param>
+            <param name="Increment"></param>
+            <param name="TimeOut"></param>
+            <returns></returns>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetLib.BMXRWL">
+            <summary>
+            Returns a reference to the internal ReaderWriterLock member.
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetLib.RWLTimeout">
+            <summary>
+            Sets and returns the timeout in milliseconds for locking the transmit port.
+            If the transmit port is unavailable an ApplicationException will be thrown.
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetLib.ReceiveTimeout">
+            <summary>
+            Set and retrieve the timeout, in milliseconds, to receive a response from the RPMS server.
+            If the retrieve time exceeds the timeout, an exception will be thrown and the connection will be closed.
+            The default is 30 seconds.
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetLib.AppContext">
+            <summary>
+            Gets/sets the Kernel Application context
+            Throws an exception if unable to set the context. 
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetLib.Encoder">
+            <summary>
+            Gets or Sets the Default Encoder to use
+            </summary>
+        </member>
+        <member name="T:IndianHealthService.BMXNet.BMXNetException">
+            <summary>
+            Custom exception class for BMXNet
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.RPMSDb.ResultSets">
+            <summary>
+            Returns the array of RMPSResultSets retrieved from RPMS
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.RPMSDb.CurrentRecordSet">
+            <summary>
+            Sets and Returns the current recordset
+            </summary>
+        </member>
+        <member name="T:IndianHealthService.BMXNet.DLoginInfo">
+            <summary>
+            Summary description for DLoginInfo.
+            </summary>
+        </member>
+        <member name="F:IndianHealthService.BMXNet.DLoginInfo.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DLoginInfo.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DLoginInfo.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.DLoginInfo.UpdateDialogData(System.Boolean)">
+            <summary>
+            If b is true, moves member vars into control data
+            otherwise, moves control data into member vars
+            </summary>
+            <param name="b"></param>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.DLoginInfo.AccessCode">
+            <summary>
+            Gets the access code entered by the user.
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.DLoginInfo.VerifyCode">
+            <summary>
+            Gets the verify code entered by the user.
+            </summary>
+        </member>
+        <member name="T:IndianHealthService.BMXNet.BMXNetConnectInfo">
+            <summary>
+            Contains methods and properties to support RPMS Login for .NET applications
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.#ctor">
+            <summary>
+            BMXNetConnector With Default Encoding (invokes BMXNetLib)
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.#ctor(System.String)">
+            <summary>
+            BMXNetConnector with a specific encoding
+            </summary>
+            <param name="encoding">String representation of encoding (e.g. windows-1256 for arabic).
+            If encoding is not found, we fall back to the default windows encoding. A debug message
+            is printed to that effect.</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.SubscribeEvent(System.String)">
+            <summary>
+            Register interest in an RPMS event.
+            </summary>
+            <param name="EventName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.UnSubscribeEvent(System.String)">
+            <summary>
+            Unregister an RPMS event
+            </summary>
+            <param name="EventName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RaiseEvent(System.String,System.String,System.Boolean)">
+            <summary>
+             Raise an RPMS event
+            </summary>
+            <param name="EventName">The name of the event to raise</param>
+            <param name="Param">Parameters associated with the event</param>
+            <param name="RaiseBack">True if the event should be raised back to the caller</param>
+            <returns></returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.Login">
+            <summary>
+            For backwards compatibility.  Internally calls LoadConnectInfo()
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.ChangeServerInfo">
+            <summary>
+            Change the internet address and port of the RPMS server
+            Throws a BMXNetException if user cancels
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo">
+            <summary>
+            Called to connect to an M server
+            Server address, port, Access and Verify codes will be
+            prompted for depending on whether these values are
+            cached.
+            </summary>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32)">
+            <summary>
+            Called to connect to the M server specified by
+            server address and listener port.  The default namespace on the server will be used.
+            Access and Verify codes will be prompted if 
+            valid values for the current Windows Identity are
+            not cached on the server.
+            </summary>
+            <param name="MServerAddress">The IP address or name of the MServer</param>
+            <param name="Port">The port on which the BMXNet Monitor is listening</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String)">
+            <summary>
+            Called to connect to the M server specified by
+            server address, listener port and namespace.
+            Access and Verify codes will be prompted if 
+            valid values for the current Windows Identity are
+            not cached on the server.
+            </summary>
+            <param name="MServerAddress">The IP address or name of the MServer</param>
+            <param name="Port">The port on which the BMXNet Monitor is listening</param>
+            <param name="Namespace">The namespace in which the BMXNet application will run</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.String)">
+            <summary>
+            Called to connect to an M server
+            using specific Access and Verify codes.
+            Server address and port will be prompted if they
+            are not cached in local storage.
+            </summary>
+            <param name="AccessCode">The user's access code</param>
+            <param name="VerifyCode">The user's verify code</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Called to connect to a specific M server
+            using specific Access and Verify codes.
+            </summary>
+            <param name="AccessCode">The user's access code</param>
+            <param name="VerifyCode">The user's verify code</param>
+            <param name="MServerAddress">The IP address or name of the MServer</param>
+            <param name="Port">The port on which the BMXNet Monitor is listening</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.LoadConnectInfo(System.String,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Called to connect to a specific namespace on the M server
+            using specific Access and Verify codes.
+            </summary>
+            <param name="AccessCode">The user's access code</param>
+            <param name="VerifyCode">The user's verify code</param>
+            <param name="MServerAddress">The IP address or name of the MServer</param>
+            <param name="Port">The port on which the BMXNet Monitor is listening</param>
+            <param name="Namespace">The namespace in which the BMXNet application will run</param>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RPMSDataTable(System.String,System.String)">
+            <summary>
+            Creates and names a DataTable using the command in CommandString
+            and the name in TableName.
+            </summary>
+            <param name="CommandString"> The SQL or RPC call</param>
+            <param name="TableName">The name of the resulting table</param>
+            <returns>
+            Returns the resulting DataTable.
+            </returns>
+        </member>
+        <member name="M:IndianHealthService.BMXNet.BMXNetConnectInfo.RPMSDataTable(System.String,System.String,System.Data.DataSet)">
+            <summary>
+            Creates and names a DataTable using the command in CommandString
+            and the name in TableName then adds it to DataSet. 
+            </summary>
+            <param name="CommandString">The SQL or RPC call</param>
+            <param name="TableName">The name of the resulting table</param>
+            <param name="dsDataSet">The dataset in which to place the table</param>
+            <returns>
+            Returns the resulting DataTable.
+            </returns>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.EventPollingEnabled">
+            <summary>
+            Enables and disables event polling for the RPMS connection
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.EventPollingInterval">
+            <summary>
+            Sets and retrieves the interval in milliseconds for RPMS event polling
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.AutoFire">
+            <summary>
+            Sets and retrieves the number of times that the Event Timer will generage a BMXNet AutoFire event.
+            For example, if AutoFire == 3, then every 3rd time the Event Timer fires, it will generate an AutoFire event.
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.ReceiveTimeout">
+            <summary>
+            Set and retrieve the timeout, in milliseconds, to receive a response from the RPMS server.
+            If the retrieve time exceeds the timeout, an exception will be thrown and the connection will be closed.
+            The default is 30 seconds.
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.DUZ">
+            <summary>
+            Returns a string representation of DUZ
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.DUZ2">
+            <summary>
+            Sets and Returns DUZ(2)
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.MServerAddress">
+            <summary>
+            Gets the address of the  RPMS Server
+            </summary>
+        </member>
+        <member name="P:IndianHealthService.BMXNet.BMXNetConnectInfo.MServerPort">
+            <summary>
+            Gets the port on which the MServer is connected
+            </summary>
+        </member>
+        <member name="T:IndianHealthService.BMXNet.BMXNetConnectInfo.ServerData">
+            <summary>
+            Serializes RPMS server address and port
+            </summary>
+        </member>
+    </members>
+</doc>
