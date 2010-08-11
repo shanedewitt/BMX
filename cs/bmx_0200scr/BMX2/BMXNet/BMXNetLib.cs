@@ -845,9 +845,9 @@ namespace IndianHealthService.BMXNet
 		{
 			NetworkStream ns = tcpClient.GetStream();
 
-            int nTimeOut = this.m_nReceiveTimeout;
-			int nCnt = 0;
-            int nTimeElapsed = 0;
+            int nTimeOut = this.m_nReceiveTimeout;  //timeout
+			int nCnt = 0;                           //number of times trying to get a message from the client
+            int nTimeElapsed = 0;                   //compare with timeout; increment 50 ms everytime.
 			while (ns.DataAvailable == false)
 			{
 				if (nCnt > 9999)
@@ -860,36 +860,36 @@ namespace IndianHealthService.BMXNet
 			}
 
 			Debug.Assert(ns.DataAvailable == true);
-			if (ns.DataAvailable == false)
+			if (ns.DataAvailable == false)          //if still false, then we timed out.
 			{
                 this.CloseConnection();
 				throw new Exception("BMXNetLib.ReceiveString timeout.  Connection Closed.");
 				//return "";
 			}
 
-			byte[] bReadBuffer = new byte[1024];
-			string sReadBuffer = "";
-			StringBuilder sbAll = new StringBuilder("", 1024);
+			byte[] bReadBuffer = new byte[1024];                //byte buffer
+			string sReadBuffer = "";                            //string buffer
+			StringBuilder sbAll = new StringBuilder("", 1024);  //string builder
 			int numberOfBytesRead = 0;
 
 			// Incoming message may be larger than the buffer size.
 
-			bool bFinished = false;
-			int nFind = -1;
-			bool bStarted = false;
-			int lpBuf = 0;
-			string sError = "";
-			string sAppError = "";
+			bool bFinished = false;                             //finished reading?
+			int nFind = -1;                                     //Position of $C(4) (End of Transmission)
+			bool bStarted = false;  //Is the buffer started?
+			int lpBuf = 0;          //?
+			string sError = "";     //?
+			string sAppError = "";  //?
 			do
 			{
-				numberOfBytesRead = ns.Read(bReadBuffer, 0, bReadBuffer.Length); 
-				if ((numberOfBytesRead == 1)&&(bStarted == false))
+				numberOfBytesRead = ns.Read(bReadBuffer, 0, bReadBuffer.Length); // read 1024 characters
+				if ((numberOfBytesRead == 1)&&(bStarted == false))               // if only one byte read, try again in 15 ms
 				{
 					Thread.Sleep(15);
-					numberOfBytesRead += ns.Read(bReadBuffer,1, bReadBuffer.Length-1); 
+					numberOfBytesRead += ns.Read(bReadBuffer,1, bReadBuffer.Length-1); //skip the first one of course
 					//Debug.Write("ReceiveString waiting for data...\n");
 				}
-				if (bStarted == false)
+				if (bStarted == false) //if this is the first transmission process error info
 				{
 					//Process error info at beginning of returned string
 					int nErrLen = bReadBuffer[0];
@@ -909,15 +909,16 @@ namespace IndianHealthService.BMXNet
 					bStarted = true;
 				}
 
-				nFind = FindChar(bReadBuffer, (char) 4);
-				if (nFind > -1)
-					bFinished = true;
-				Debug.Assert(numberOfBytesRead > -1);
+				nFind = FindChar(bReadBuffer, (char) 4); //find end of transmission chracter
+				if (nFind > -1) // if found
+					bFinished = true; //then we are finished
+				Debug.Assert(numberOfBytesRead > -1); // this must be true
 				sReadBuffer = m_Encoding.GetString(bReadBuffer, lpBuf, numberOfBytesRead);
 				lpBuf = 0;
 				if (nFind > -1)
 				{
-					sbAll.Append(sReadBuffer, 0, numberOfBytesRead -1);
+					//sbAll.Append(sReadBuffer, 0, numberOfBytesRead -1); //utf8
+                    sbAll.Append(sReadBuffer, 0, sReadBuffer.Length - 1);
 				}
 				else 
 				{
