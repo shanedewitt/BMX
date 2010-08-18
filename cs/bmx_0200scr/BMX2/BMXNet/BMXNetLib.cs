@@ -917,7 +917,6 @@ namespace IndianHealthService.BMXNet
 				lpBuf = 0;
 				if (nFind > -1)
 				{
-					//sbAll.Append(sReadBuffer, 0, numberOfBytesRead -1); //utf8
                     sbAll.Append(sReadBuffer, 0, sReadBuffer.Length - 1);
 				}
 				else 
