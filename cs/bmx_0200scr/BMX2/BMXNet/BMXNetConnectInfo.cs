@@ -971,17 +971,23 @@ namespace IndianHealthService.BMXNet
 				rsDivisions =  this.GetUserDivisions();
 				m_nDivisionCount = rsDivisions.Rows.Count;
 
-				//The MOST_RECENT_LOOKUP field contains DUZ(2)
-				foreach (System.Data.DataRow r in rsDivisions.Rows)
-				{
-					string sTemp = r["MOST_RECENT_LOOKUP"].ToString();
-					if ((sTemp == "1") || (rsDivisions.Rows.Count == 1))
-					{
-						this.m_sDivision = r["FACILITY_NAME"].ToString();
-						this.m_sDUZ2 = r["FACILITY_IEN"].ToString();
-						break;
-					}
-				}
+                // Must have at least one division in order for our code to work
+                // If user has no divisions, M routine will invent one for our sake (get it from kernel).
+                // 
+                Debug.Assert(m_nDivisionCount > 0, "Must get at least one division from VISTA");
+
+                // if more than one division, have user pick
+                // if just one, get the DUZ(2) and then set it via the property DUZ2.
+                
+                if (m_nDivisionCount > 1)
+                {
+                    ChangeDivision(null);
+                    // following true if user cancelled.
+                    if (DUZ2 == null) throw new BMXNetException("No division chosen -- can't log in");
+                }
+                // if just one
+                else DUZ2 = m_sDUZ2 = rsDivisions.Rows[0]["FACILITY_IEN"].ToString();
+                
 			}
 			catch(Exception bmxEx)
 			{
@@ -1010,7 +1016,7 @@ namespace IndianHealthService.BMXNet
 		public void ChangeDivision(System.Windows.Forms.Form frmCaller)
 		{
 			DSelectDivision dsd = new DSelectDivision();
-			dsd.InitializePage(UserDivisions, DUZ2);
+			dsd.InitializePage(UserDivisions);
 
 			if (dsd.ShowDialog(frmCaller) == DialogResult.Cancel)
 				return;
