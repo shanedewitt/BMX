@@ -1,8 +1,9 @@
-BMXRPC3	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ; 
+BMXRPC3	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;  ; 8/30/10 2:56pm
 	;;2.1;BMX;;Jul 26, 2009
 	;Mods by WV/SMH
 	;7/26/09 Removed references to ^AUTTSITE, an IHS file in GETFAC*
-	;
+	;8/30/10 Changed GETFCRS to return a better list of user divisions
+    ; - Checks to see if there are any divisions
 	;
 VARVAL(RESULT,VARIABLE)	;returns value of passed in variable
 	S VARIABLE=$TR(VARIABLE,"~","^")
@@ -135,29 +136,22 @@ GETFC(BMXFACS,DUZ)	;Gets all facilities for a user
 	S BMXFACS=BMXN-(BMXN>1)_";"_BMXFACS
 	Q
 	;
-GETFCRS(BMXFACS,BMXDUZ)	;Gets all facilities for a user - returns RECORDSET
-	;
-	;TODO: return as global array, add error checking
-	N BMXFN,BMXN,BMXSUB,BMXRCNT
-	S BMXDUZ=$TR(BMXDUZ,$C(13),"")
-	S BMXDUZ=$TR(BMXDUZ,$C(10),"")
-	S BMXDUZ=$TR(BMXDUZ,$C(9),"")
+GETFCRS(BMXY,BMXDUZ)	;Gets all facilities for a user - returns RECORDSET
+	;/mods by //smh for WV
+	N $ET S $ET="G ERFC^BMXRPC3"
+    N BMXFN    ; Facility Number
+	S BMXDUZ=$TR(BMXDUZ,$C(13)) ; Strip CR,LF,tab
+	S BMXDUZ=$TR(BMXDUZ,$C(10))
+	S BMXDUZ=$TR(BMXDUZ,$C(9))
+	S BMXY="T00030FACILITY_NAME^T00030FACILITY_IEN^T00002DEFAULT"_$C(30)
 	S BMXFN=0
-	S BMXSUB="^VA(200,"_BMXDUZ_",2,"
-	S BMXFACS="T00030FACILITY_NAME^T00030FACILITY_IEN^T00002MOST_RECENT_LOOKUP"_$C(30)
-	;F BMXN=1:1 S BMXFN=$O(^VA(200,BMXDUZ,2,BMXFN)) Q:BMXFN=""  D
-	S BMXRCNT=0  ;cmi/maw mod 10/17/2006
-	F BMXN=1:1 S BMXFN=$O(^VA(200,BMXDUZ,2,BMXFN)) Q:'BMXFN  D  ;IHS/ANMC/LJF 8/9/01
-	. ;S BMXFACS=BMXFACS_$P(^DIC(4,BMXFN,0),U,1)_"^"_BMXFN_$C(30)
-	. S BMXFACS=BMXFACS_$P(^DIC(4,BMXFN,0),U,1)_"^"_BMXFN
-	. ;S BMXRCNT=0  ;cmi/maw orig
-	. ;I $D(^DISV(BMXDUZ,BMXSUB)),^DISV(BMXDUZ,BMXSUB)=BMXFN S BMXRCNT=1
-	. ;I $G(DUZ(2))=BMXFN S BMXRCNT=1  ;cmi/maw orig
-	. S BMXRCNT=BMXRCNT+1  ;cmi/maw mod
-	. S BMXFACS=BMXFACS_"^"_BMXRCNT_$C(30)
-	;//smh I BMXN=1 S BMXFN=$P(^AUTTSITE(1,0),U,1) D
-	;//smh . S BMXFACS=BMXFACS_$P(^DIC(4,BMXFN,0),U,1)_"^"_BMXFN_"^"_1_$C(30)
-	S BMXFACS=BMXFACS_$C(31)
+	F  S BMXFN=$O(^VA(200,BMXDUZ,2,BMXFN)) Q:'BMXFN  D
+	. ; DD for ^VA(200,DUZ,2,DUZ(2)) is DUZ(2)^default. DUZ(2) is dinummed.
+    . S BMXY=BMXY_$P(^DIC(4,BMXFN,0),U,1)_U_^VA(200,BMXDUZ,2,BMXFN,0)_$C(30)
+    ; Crazy line: if we have no results, then use kernel's DUZ(2) set
+    ; during sign-on
+    I $L(BMXY,$C(30))<3 S BMXY=BMXY_$P(^DIC(4,DUZ(2),0),U,1)_U_DUZ(2)_$C(30)
+	S BMXY=BMXY_$C(31)
 	Q
 	;
 SETFCRS(BMXY,BMXFAC)	     ;
@@ -171,7 +165,9 @@ SETFCRS(BMXY,BMXFAC)	     ;
 	N BMXSUB,BMXFACN
 	I '+DUZ S BMXY=BMXY_0_"^"_0_"^"_0_$C(30)_$C(31) Q
 	I '+BMXFAC S BMXY=BMXY_DUZ_"^"_0_"^"_0_$C(30)_$C(31) Q
-	I '$D(^VA(200,DUZ,2,+BMXFAC)) S BMXY=BMXY_DUZ_"^"_0_"^"_0_$C(30)_$C(31) Q
+	; //SMH Line below is incorrect. Facility valid if not in user profile
+    ; if it is default kernel facility
+    ; I '$D(^VA(200,DUZ,2,+BMXFAC)) S BMXY=BMXY_DUZ_"^"_0_"^"_0_$C(30)_$C(31) Q
 	S DUZ(2)=BMXFAC ;IHS/OIT/HMW SAC Exemption Applied For
 	S BMXFACN=$G(^DIC(4,+DUZ(2),0))
 	S BMXFACN=$P(BMXFACN,"^")
