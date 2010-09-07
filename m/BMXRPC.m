@@ -1,4 +1,4 @@
-BMXRPC	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;
+BMXRPC	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ; 9/7/10 5:04am
 	;;2.1;BMX;;Jul 26, 2009
 	;;Stolen from:* MICHAEL REMILLARD, DDS * ALASKA NATIVE MEDICAL CENTER *
 	;;  GENERIC LOOKUP UTILITY FOR RETURNING MATCHING RECORDS
@@ -11,6 +11,9 @@ BMXRPC	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;
 	;           before being used as an RPC.
 	;
 	;----------
+    ; Change Log:
+    ; UJO/SMH on 7 Sep 2010 -- added RPC for determining UTF-8 support
+    ; Tag: UTF-8
 LOOKUP(BMXGBL,BMXFL,BMXFLDS,BMXFLG,BMXIN,BMXMX,BMXIX,BMXSCR,BMXMC)	;EP
 	;---> Places matching records from requested file into a
 	;---> result global, ^BMXTEMP($J).  The exact global name
@@ -165,3 +168,11 @@ PASSERR(BMXGBL,BMXERR)	;EP
 	S BMXGBL="^BMXTEMP("_$J_")"
 	S ^BMXTEMP($J,1)=BMX31_BMXERR
 	Q
+UTF8(BMXRET)
+    ; RPC: BMX UTF-8
+    ; UJO/SMH - tests if this database supports UTF-8 encoding
+    ; 0 for FALSE for 1 for TRUE.
+    I ^%ZOSF("OS")'["GT.M" S BMXRET=0 QUIT
+    I $ZCHSET="M" S BMXRET=0 QUIT
+    I $ZCHSET="UTF-8" S BMXRET=1 QUIT
+    S BMXRET=0 QUIT  ;default
