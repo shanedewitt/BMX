@@ -1,4 +1,4 @@
-Release notes for BMX 2.1 - released July 22, 2009
+Release notes for BMX 2.2 - released September 7, 2010
 
 *** IMPORTANT ***
 DO NOT INSTALL ON RPMS. THIS RELEASE IS FOR VISTA SYSTEMS!
@@ -11,6 +11,11 @@ BMX.net is a broker and a software library that allows programs in .net to commu
 	- Technical manual: http://www.ihs.gov/Cio/RPMS/PackageDocs/bmx/bmx_020t.pdf
 
 Release 2.1 adds support for GT.M.
+Release 2.2 fixes several bugs:
+ - Selection of division works properly now with BMXNet22.dll
+ - Timeouts are better now so it won't leave processes hanging
+ - Process name is now set upon connection
+
 *** IMPORTANT ***
 BMX support for GT.M uses xinetd listeners; not listeners managed by the Mumps environment. As such, the installation instructions provided by IHS won't work for GT.M.
 *****************
@@ -18,14 +23,14 @@ BMX support for GT.M uses xinetd listeners; not listeners managed by the Mumps e
 Pre-requisites:
 	Fileman v22
 	Kernel v8
-	XB/ZIB v3
+	XB/ZIB v3 or above
 	XWB 1.1 patch 100001 (optional - to enable a unified listener for all brokers)
 
 Pre-requisites are examined by the environment check routine.
 
 Installation Instructions
 =========================
-Installation of BMX.net 2.1 consists of 6 steps.
+Installation of BMX.net 2.2 consists of 6 steps.
 1. Install BMX in Vista
 2. Install Xinetd
 3. Configure listener in Xinetd
@@ -33,7 +38,7 @@ Installation of BMX.net 2.1 consists of 6 steps.
 5. Users who don't hold XUPROGMODE will need BMXPRC assigned as an option. If you assign it as part of their primary menu, make sure to rebuild the menu before proceeding.
 6. (optional) Install XWB 1.1 patch 100001
 
-1. Install BMX in Vista
+1. Install BMX in Vista (example; actual version will differ)
 =========================
 GTM>s DUZ=9 D ^XUP
 
