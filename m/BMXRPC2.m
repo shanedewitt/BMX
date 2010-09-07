@@ -1,5 +1,5 @@
 BMXRPC2	; IHS/OIT/HMW - FIELD LIST ;
-	;;2.1;BMX;;Jul 26, 2009
+	;;2.2;BMX;;Sep 07, 2010
 	;
 FLDLIST(BMXGBL,BMXFL,BMXATTR,BMXSCR)	       ;EP
 	;TODO: Change all this to be a hard-coded $O thru ^DD

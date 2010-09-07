@@ -1,9 +1,9 @@
 BMXRPC3	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;  ; 8/30/10 2:56pm
-	;;2.1;BMX;;Jul 26, 2009
+	;;2.2;BMX;;Sep 07, 2010
 	;Mods by WV/SMH
 	;7/26/09 Removed references to ^AUTTSITE, an IHS file in GETFAC*
 	;8/30/10 Changed GETFCRS to return a better list of user divisions
-    ; - Checks to see if there are any divisions
+	   ; - Checks to see if there are any divisions
 	;
 VARVAL(RESULT,VARIABLE)	;returns value of passed in variable
 	S VARIABLE=$TR(VARIABLE,"~","^")
@@ -139,7 +139,7 @@ GETFC(BMXFACS,DUZ)	;Gets all facilities for a user
 GETFCRS(BMXY,BMXDUZ)	;Gets all facilities for a user - returns RECORDSET
 	;/mods by //smh for WV
 	N $ET S $ET="G ERFC^BMXRPC3"
-    N BMXFN    ; Facility Number
+	   N BMXFN    ; Facility Number
 	S BMXDUZ=$TR(BMXDUZ,$C(13)) ; Strip CR,LF,tab
 	S BMXDUZ=$TR(BMXDUZ,$C(10))
 	S BMXDUZ=$TR(BMXDUZ,$C(9))
@@ -147,10 +147,10 @@ GETFCRS(BMXY,BMXDUZ)	;Gets all facilities for a user - returns RECORDSET
 	S BMXFN=0
 	F  S BMXFN=$O(^VA(200,BMXDUZ,2,BMXFN)) Q:'BMXFN  D
 	. ; DD for ^VA(200,DUZ,2,DUZ(2)) is DUZ(2)^default. DUZ(2) is dinummed.
-    . S BMXY=BMXY_$P(^DIC(4,BMXFN,0),U,1)_U_^VA(200,BMXDUZ,2,BMXFN,0)_$C(30)
-    ; Crazy line: if we have no results, then use kernel's DUZ(2) set
-    ; during sign-on
-    I $L(BMXY,$C(30))<3 S BMXY=BMXY_$P(^DIC(4,DUZ(2),0),U,1)_U_DUZ(2)_$C(30)
+	   . S BMXY=BMXY_$P(^DIC(4,BMXFN,0),U,1)_U_^VA(200,BMXDUZ,2,BMXFN,0)_$C(30)
+	   ; Crazy line: if we have no results, then use kernel's DUZ(2) set
+	   ; during sign-on
+	   I $L(BMXY,$C(30))<3 S BMXY=BMXY_$P(^DIC(4,DUZ(2),0),U,1)_U_DUZ(2)_$C(30)
 	S BMXY=BMXY_$C(31)
 	Q
 	;
@@ -166,8 +166,8 @@ SETFCRS(BMXY,BMXFAC)	     ;
 	I '+DUZ S BMXY=BMXY_0_"^"_0_"^"_0_$C(30)_$C(31) Q
 	I '+BMXFAC S BMXY=BMXY_DUZ_"^"_0_"^"_0_$C(30)_$C(31) Q
 	; //SMH Line below is incorrect. Facility valid if not in user profile
-    ; if it is default kernel facility
-    ; I '$D(^VA(200,DUZ,2,+BMXFAC)) S BMXY=BMXY_DUZ_"^"_0_"^"_0_$C(30)_$C(31) Q
+	   ; if it is default kernel facility
+	   ; I '$D(^VA(200,DUZ,2,+BMXFAC)) S BMXY=BMXY_DUZ_"^"_0_"^"_0_$C(30)_$C(31) Q
 	S DUZ(2)=BMXFAC ;IHS/OIT/HMW SAC Exemption Applied For
 	S BMXFACN=$G(^DIC(4,+DUZ(2),0))
 	S BMXFACN=$P(BMXFACN,"^")

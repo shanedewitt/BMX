@@ -1,5 +1,5 @@
 BMXSQL2	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;
-	;;2.1;BMX;;Jul 26, 2009
+	;;2.2;BMX;;Sep 07, 2010
 	;
 	;
 FLDFILE(BMXIN)	    ;EP - Returns name of file containing field BMXIN

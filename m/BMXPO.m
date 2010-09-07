@@ -1,5 +1,5 @@
 BMXPO	; IHS/CMI/MAW - Populate appcontext with all namespaced RPC's ;
-	;;2.1;BMX;;Jul 26, 2009
+	;;2.2;BMX;;Sep 07, 2010
 	;
 	;
 MAIN	;EP - this is the main routine driver

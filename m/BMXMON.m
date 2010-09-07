@@ -1,11 +1,15 @@
-BMXMON	; IHS/OIT/HMW - BMXNet MONITOR ; 7/20/2009
-	;;2.1;BMX;;Jul 26, 2009
+BMXMON	; IHS/OIT/HMW - BMXNet MONITOR ; 7/20/2009 ; 9/7/10 7:47am
+	;;2.2;BMX;;Sep 07, 2010
 	;
 	;IHS/OIT/HMW Patch 1 added validity check for passed-in namespace
 	; 7/20/2009: Release of patch to support GT.M WV/SMH
 	; Changes:
 	; Addition of XINETD and GTMLNX entry points for support of GT.M
 	; Changes of W *-3 (which only works on Cache) to W !
+	   ; 9/7/2009: Minor bug fixes and enhancements
+	   ; In GTMLNX: Set process name
+	   ; In GTMLNX: Time out based now on the Kernel Broker Timeout field 
+	   ; in kernel system parameters file
 	;
 STRT(BMXPORT,NS,IS,VB)	;EP
 	;Interactive monitor start
@@ -174,7 +178,7 @@ XINETD	;PEP Directly from xinetd or inetd for GT.M
 	I %["::ffff:" S IO("GTM-IP")=$P(%,"::ffff:",2) ; IPv6 support
 	; Read message type
 	N BMXACT,BMXDTIME
-	S BMXDTIME=999999
+	S BMXDTIME=10  ; change in 2.2 instead of 9999999 - initial conn timout
 	R BMXACT#5:BMXDTIME
 	Q:BMXACT'="{BMX}"  ; Not a BMX message - quit.
 	; Fall through to below...
@@ -183,7 +187,7 @@ GTMLNX	;EP from XWBTCPM for GT.M
 	; Vars: Read timeout, msg len, msg, windows auth, Namespace
 	N BMXDTIME,BMXLEN,BMXACT,BMXWIN,BMXNS
 	S BMXNSJ="",BMXWIN=0  ; No NS on GT.M, no Windows Authentication
-	S BMXDTIME(1)=.5,BMXDTIME=999999
+	S BMXDTIME(1)=.5,BMXDTIME=180  ; sign on timeout
 	R BMXACT#5:BMXDTIME ;Read next 5 chars - message length
 	S BMXLEN=+BMXACT
 	R BMXACT#BMXLEN:BMXDTIME
@@ -196,6 +200,8 @@ SESSION(BMXWIN)	;EP
 	;BMXWIN = 1: Enable integrated security
 SESSRES	;EP - reentry point from trap
 	;IHS/OIT/HMW SAC Exemption Applied For
+	S BMXDTIME(1)=.5,BMXDTIME=$$BAT^XUPARAM  ; new in 2.2: Use kernel rpc timeout instead of 9999999
+	   D SETNM^%ZOSV("BMX:ip"_$P(IO("GTM-IP"),".",3,4)) ; new in 2.2: set proces name
 	N $ESTACK S $ETRAP="D ETRAP^BMXMON"
 	S DIQUIET=1,U="^" D DT^DICRW
 	D UNREGALL^BMXMEVN ;Unregister all events for this session

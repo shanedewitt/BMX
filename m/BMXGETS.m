@@ -1,5 +1,5 @@
 BMXGETS	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;
-	;;2.1;BMX;;Jul 26, 2009
+	;;2.2;BMX;;Sep 07, 2010
 	;
 	;;Horace Whitt
 	;;Interface to GETS^DIQ

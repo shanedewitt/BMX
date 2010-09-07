@@ -1,5 +1,5 @@
 BMXADO2	; IHS/CIHA/GIS - BMX ADO RECORDSET UTILS ;
-	;;2.1;BMX;;Jul 26, 2009
+	;;2.2;BMX;;Sep 07, 2010
 	;
 	;
 GEN(BMXY,BMXF)	;EP - Generate an ADO Schema string from a list of fields
