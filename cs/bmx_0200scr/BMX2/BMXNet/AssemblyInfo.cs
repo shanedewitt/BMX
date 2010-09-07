@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("BMXNet21")]
+[assembly: AssemblyTitle("BMXNet22")]
 [assembly: AssemblyDescription("ADO.NET 2.0 Data Provider for VISTA")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("2.1.2.*")]
+[assembly: AssemblyVersion("2.2.0.*")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
@@ -57,5 +57,5 @@ using System.Runtime.InteropServices;
 //[assembly: AssemblyDelaySign(false)]
 //[assembly: AssemblyKeyFile("")]
 //[assembly: AssemblyKeyName("")]
-[assembly: AssemblyFileVersionAttribute("2.1.2.0")]
+[assembly: AssemblyFileVersionAttribute("2.2.0.0")]
 [assembly: ComVisibleAttribute(false)]

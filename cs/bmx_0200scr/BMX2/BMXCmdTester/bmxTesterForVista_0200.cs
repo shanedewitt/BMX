@@ -23,7 +23,9 @@ namespace SamsStuff.IHS.BMX
             ConnectionManager.AppContext = "BMXRPC";
             string result = ConnectionManager.TransmitRPC("BMX USER", ConnectionManager.DUZ);
             Console.WriteLine("Simple RPC: User Name: " + result);
-            
+            result = ConnectionManager.TransmitRPC("BMX UTF-8", "");
+            Console.WriteLine("UTF-8 stuff: " + result);
+
             //string result = 
             ConnectionManager.AppContext = "OR CPRS GUI CHART";
             result = ConnectionManager.TransmitRPC("ORWU NEWPERS","A^1");
