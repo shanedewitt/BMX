@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMXNetTest", "BMXNetTest\BMXNetTest.csproj", "{A3A19C51-73D2-4EEE-A190-F1EFBF477BCB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DE8E4CC9-4F3A-4E32-8DFE-EE5692E8FC45} = {DE8E4CC9-4F3A-4E32-8DFE-EE5692E8FC45}

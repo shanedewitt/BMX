@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("BMXNet22")]
 [assembly: AssemblyDescription("ADO.NET 2.0 Data Provider for VISTA")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("WorldVistA")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("(None)")]
 [assembly: AssemblyTrademark("")]

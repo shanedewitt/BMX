@@ -58,7 +58,7 @@ namespace IndianHealthService.BMXNet
             this.cmdCancel.Location = new System.Drawing.Point(376, 8);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(56, 24);
-            this.cmdCancel.TabIndex = 4;
+            this.cmdCancel.TabIndex = 3;
             this.cmdCancel.Text = "Cancel";
             // 
             // cmdOK
@@ -67,7 +67,7 @@ namespace IndianHealthService.BMXNet
             this.cmdOK.Location = new System.Drawing.Point(296, 8);
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(64, 24);
-            this.cmdOK.TabIndex = 3;
+            this.cmdOK.TabIndex = 2;
             this.cmdOK.Text = "OK";
             this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
             // 
@@ -105,7 +105,7 @@ namespace IndianHealthService.BMXNet
             this.lstDivision.Location = new System.Drawing.Point(40, 48);
             this.lstDivision.Name = "lstDivision";
             this.lstDivision.Size = new System.Drawing.Size(384, 121);
-            this.lstDivision.TabIndex = 9;
+            this.lstDivision.TabIndex = 1;
             this.lstDivision.DoubleClick += new System.EventHandler(this.lstDivision_DoubleClick);
             // 
             // label1
@@ -118,6 +118,7 @@ namespace IndianHealthService.BMXNet
             // 
             // DSelectDivision
             // 
+            this.AcceptButton = this.cmdOK;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(456, 302);
             this.Controls.Add(this.label1);
