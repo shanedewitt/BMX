@@ -1355,7 +1355,7 @@ namespace IndianHealthService.BMXNet
             }
             set
             {
-                this.m_Encoding = Encoder;
+                this.m_Encoding = value;
             }
         }
 
