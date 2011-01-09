@@ -806,8 +806,8 @@ namespace IndianHealthService.BMXNet
 			}
 			catch (Exception ex)
 			{
-				string s = ex.Message + ex.StackTrace;
-				throw new BMXNetException(s);
+				//string s = ex.Message + ex.StackTrace;
+                throw new BMXNetException(ex.Message, ex);
 			}
 		}
 
@@ -1105,7 +1105,8 @@ namespace IndianHealthService.BMXNet
                     DateTime receiveTime = DateTime.Now;
                     Debug.Write("TransmitRPC Received: " + strResult.Replace((char) 30, (char) 10) + "\n");
                     TimeSpan executionTime = receiveTime - sendTime;
-                    Debug.Write("Execution Time: " + executionTime.Milliseconds + " ms.\n");
+                    Debug.Write("Execution Time: " + executionTime.TotalMilliseconds + " ms.\n");
+                    Debug.Write("-------------------------------------------------------\n");
 #endif
 					if (sOldAppContext != "")
 					{

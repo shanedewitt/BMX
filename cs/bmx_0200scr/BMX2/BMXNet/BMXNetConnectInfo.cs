@@ -95,8 +95,6 @@ namespace IndianHealthService.BMXNet
 			}
 			set
 			{
-//				Debug.Write("ConnectInfo handle: " + this.Handle.ToString() + "\n");
-				//System.IntPtr pHandle = this.Handle;
 				m_timerEvent.Enabled = value;
 			}
 		}
@@ -244,6 +242,7 @@ namespace IndianHealthService.BMXNet
 						args.BMXParam = "";
 						if (BMXNetEvent != null)
 						{
+                            Debug.Write("BMXNet AutoFire event raised from BMXNetConnectInfo");
 							BMXNetEvent(obj, args);
 						}
 						this.m_timerEvent.Enabled = true;
@@ -904,7 +903,7 @@ namespace IndianHealthService.BMXNet
 							{
 								Debug.Write(ex.Message);
 								//MessageBox.Show(ex.Message, "RPMS Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                throw new Exception(ex.Message); ;
+                                throw ex;
 							}
 						}while ((bStop == DialogResult.OK) && (m_BMXNetLib.Connected == false));
 					}

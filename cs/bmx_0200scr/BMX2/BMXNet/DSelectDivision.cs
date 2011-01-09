@@ -129,6 +129,7 @@ namespace IndianHealthService.BMXNet
             this.Name = "DSelectDivision";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select Division";
+            this.Load += new System.EventHandler(this.DSelectDivision_Load);
             this.pnlPageBottom.ResumeLayout(false);
             this.pnlDescription.ResumeLayout(false);
             this.grpDescriptionResourceGroup.ResumeLayout(false);
@@ -238,6 +239,11 @@ namespace IndianHealthService.BMXNet
             this.UpdateDialogData(false);
             this.DialogResult = DialogResult.OK;
             return;
+        }
+
+        private void DSelectDivision_Load(object sender, EventArgs e)
+        {
+            this.Activate();
         }
 
 
