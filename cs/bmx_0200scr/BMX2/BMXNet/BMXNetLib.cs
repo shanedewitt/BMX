@@ -1026,15 +1026,17 @@ namespace IndianHealthService.BMXNet
 		{
 			try
 			{
-				string sContext = this.AppContext;
-				this.AppContext = "BMXRPC";
+                /* 3110109 -- smh Commented out for performance issues.
+				/*string sContext = this.AppContext;
+				this.AppContext = "BMXRPC";*/
 				Variable = Variable.Replace("^","~");
 				string sRet = "0";
 				bool bRet = false;
 				string sParam = Variable + "^" + Increment + "^" + TimeOut;
 				sRet = TransmitRPC("BMX LOCK", sParam);
 				bRet = (sRet == "1")?true:false;
-				this.AppContext = sContext;
+                /* 3110109 -- smh Commented out for performance issues.
+				/*this.AppContext = sContext;*/
 				return bRet;
 			}
 			catch (Exception ex)
@@ -1076,66 +1078,74 @@ namespace IndianHealthService.BMXNet
 
 		public string TransmitRPC(string sRPC, string sParam, int nLockTimeOut)
 		{
-			try
-			{
-				try
-				{
-					if (m_bConnected == false) 
-					{
-						throw new BMXNetException("BMXNetLib.TransmitRPC failed because BMXNetLib is not connected to RPMS.");
-					}
-					Debug.Assert(m_cDUZ != "");
-					Debug.Assert(m_pCommSocket != null);
+            lock (this)  // This method CANNOT be executed simultaneously! 
+            {
+                try
+                {
+                    try
+                    {
+                        if (m_bConnected == false)
+                        {
+                            throw new BMXNetException("BMXNetLib.TransmitRPC failed because BMXNetLib is not connected to RPMS.");
+                        }
+                        Debug.Assert(m_cDUZ != "");
+                        Debug.Assert(m_pCommSocket != null);
 
-					string sOldAppContext = "";
-					if (sRPC.StartsWith("BMX")&&(this.m_cAppContext != "BMXRPC"))
-					{
-						sOldAppContext  = this.m_cAppContext;
-						this.AppContext = "BMXRPC";
-					}
-					string sMult = "";
-					string sSend = ADEBLDMsg(m_cHDR, sRPC, sParam, ref sMult);
-					SendString(m_pCommSocket, sSend, sMult);
-#if TRACE   
-                    DateTime sendTime = DateTime.Now;
-                    Debug.Write("TransmitRPC Sent: " + sSend.Replace((char) 30, (char) 10) + "\n");
-#endif
-                    string strResult = ReceiveString(m_pCommSocket);
+                        string sOldAppContext = "";
+                        /* 3110109 -- smh Commented out for performance issues.
+                         if (sRPC.StartsWith("BMX")&&(this.m_cAppContext != "BMXRPC"))
+                        {
+                            sOldAppContext  = this.m_cAppContext;
+                            this.AppContext = "BMXRPC";
+                        }
+                         */
+                        string sMult = "";
+                        string sSend = ADEBLDMsg(m_cHDR, sRPC, sParam, ref sMult);
+                        SendString(m_pCommSocket, sSend, sMult);
 #if TRACE
-                    DateTime receiveTime = DateTime.Now;
-                    Debug.Write("TransmitRPC Received: " + strResult.Replace((char) 30, (char) 10) + "\n");
-                    TimeSpan executionTime = receiveTime - sendTime;
-                    Debug.Write("Execution Time: " + executionTime.TotalMilliseconds + " ms.\n");
-                    Debug.Write("-------------------------------------------------------\n");
+                        DateTime sendTime = DateTime.Now;
+                        int threadid = Thread.CurrentThread.ManagedThreadId;
+                        Debug.Write("TransmitRPC Sent: (T:" + threadid + ")" + sSend.Replace((char)30, (char)10) + "\n");
 #endif
-					if (sOldAppContext != "")
+                        string strResult = ReceiveString(m_pCommSocket);
+#if TRACE
+                        DateTime receiveTime = DateTime.Now;
+                        Debug.Write("TransmitRPC Received: (T:" + threadid + ")" + strResult.Replace((char)30, (char)10) + "\n");
+                        TimeSpan executionTime = receiveTime - sendTime;
+                        Debug.Write("Execution Time: " + executionTime.TotalMilliseconds + " ms.\n");
+                        Debug.Write("-------------------------------------------------------\n");
+#endif
+                        /* /* 3110109 -- smh Commented out for performance issues.
+                     * if (sOldAppContext != "")
 					{
 						this.AppContext = sOldAppContext;
 					}
-					return strResult;				
-				}
-				catch (Exception ex)
-				{
-					if (ex.Message == "Unable to write data to the transport connection.")
-					{
-						m_bConnected = false;
-					}
-					throw ex;
-				}
-				finally
-				{
-				}			
-			}
-			catch (ApplicationException aex)
-			{
-				// The writer lock request timed out.
-				Debug.Write("TransmitRPC writer lock request timed out.\n");
-				throw aex;
-			}
-			catch (Exception OuterEx)
-			{
-				throw OuterEx;
-			}
+                     */
+                        return strResult;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.Message == "Unable to write data to the transport connection.")
+                        {
+                            m_bConnected = false;
+                        }
+                        throw ex;
+                    }
+                    finally
+                    {
+                    }
+                }
+                catch (ApplicationException aex)
+                {
+                    // The writer lock request timed out.
+                    Debug.Write("TransmitRPC writer lock request timed out.\n");
+                    throw aex;
+                }
+                catch (Exception OuterEx)
+                {
+                    throw OuterEx;
+                }
+            }
 		}
 
 		public string TransmitRPC(string sRPC, string sParam)

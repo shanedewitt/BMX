@@ -86,22 +86,27 @@ namespace IndianHealthService.BMXNet
 		private void _executeUpdate(out RPMSDbResultSet resultset)
 		{
 			string sRPC;
-			string sOldContext = m_rpx.AppContext;
 
-			if (m_rpx.AppContext != "BMXRPC")
-			{
-				m_rpx.AppContext = "BMXRPC";
-			}
+            /* /* 3110109 -- smh Commented out for performance
+            string sOldContext = m_rpx.AppContext;
+
+            if (m_rpx.AppContext != "BMXRPC")
+            {
+                m_rpx.AppContext = "BMXRPC";
+            }
+             */
 
 			sRPC = "BMX UPDATE";
 			int nStart = 7;
 			m_sCmd = m_sCmd.Substring(nStart);
 			string sResult = m_rpx.TransmitRPC( sRPC,  m_sCmd);
-			
-			if (sOldContext != m_rpx.AppContext)
-			{
-				m_rpx.AppContext = sOldContext;
-			}
+
+            /* /* 3110109 -- smh Commented out for performance
+            if (sOldContext != m_rpx.AppContext)
+            {
+                m_rpx.AppContext = sOldContext;
+            }
+             */
 
 			resultset = new RPMSDbResultSet();
 			resultset.recordsAffected = 1; //Make this the return value of the call
@@ -112,13 +117,17 @@ namespace IndianHealthService.BMXNet
 			//Make rpx call
 			string sRPC;
 			string sParam;
-			string sOldContext = m_rpx.AppContext;
-			if (m_sQueryType == "SELECT")
+            /* /* 3110109 -- smh Commented out for performance issues.
+            string sOldContext = m_rpx.AppContext;
+            */
+            if (m_sQueryType == "SELECT")
 			{
-				if (m_rpx.AppContext != "BMXRPC")
-				{
-					m_rpx.AppContext = "BMXRPC";
-				}
+                /*/* 3110109 -- smh Commented out for performance issues.
+                if (m_rpx.AppContext != "BMXRPC")
+                {
+                    m_rpx.AppContext = "BMXRPC";
+                }
+                 */
 				sRPC = "BMX SQL";
 				sParam = m_sCmd;
 			}
@@ -130,10 +139,12 @@ namespace IndianHealthService.BMXNet
 			
 			string sResult = m_rpx.TransmitRPC( sRPC,  sParam);
 			
+            /*
 			if (sOldContext != m_rpx.AppContext)
 			{
 				m_rpx.AppContext = sOldContext;
 			}
+             */
 			
 			return sResult;
 		}

@@ -12,6 +12,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Timers;
 using System.Threading;
+using System.Runtime.Remoting.Messaging;
 
 
 namespace IndianHealthService.BMXNet 
@@ -227,7 +228,7 @@ namespace IndianHealthService.BMXNet
 		{
 			try
 			{
-				this.bmxNetLib.BMXRWL.AcquireWriterLock(5);
+				//this.bmxNetLib.BMXRWL.AcquireWriterLock(5);
 				try
 				{
 					this.m_timerEvent.Enabled = false;
@@ -264,15 +265,21 @@ namespace IndianHealthService.BMXNet
                             this.CreateHandle();
                         }
                         RPMSDataTableDelegate rdtd = new RPMSDataTableDelegate(RPMSDataTable);
-						dtEvents = (DataTable) this.Invoke(rdtd, new object[] {"BMX EVENT POLL", "BMXNetEvents"});
-					}
+						
+                        //SMH - 3100110 - BMX EVENT POLL happens in the foreground. It blocks the main thread 
+                        //until it is done. So I changed it to async so that there would be no jerking
+                        //on this thread while it's taking place.
+                        //dtEvents = (DataTable) this.Invoke(rdtd, new object[] {"BMX EVENT POLL", "BMXNetEvents"});
+                        
+                        rdtd.BeginInvoke("BMX EVENT POLL", "BMXNetEvents", new AsyncCallback(BMXNetEventsCallback), null);
+                    }
 					catch (Exception ex)
 					{
 						string sMsg = ex.Message;
 						this.m_timerEvent.Enabled = true;
 						return;
 					}
-
+                    /*
 					try
 					{
 						if (dtEvents.Rows.Count == 0)
@@ -285,6 +292,7 @@ namespace IndianHealthService.BMXNet
 					{
 						Debug.Write("upper Exception in BMXNetConnectInfo.OnEventTimer: " + ex.Message + "\n");
 					}
+                    
 					try
 					{
 						//If events exist, raise BMXNetEvent
@@ -304,22 +312,69 @@ namespace IndianHealthService.BMXNet
 					{
 						Debug.Write("lower Exception in BMXNetConnectInfo.OnEventTimer: " + ex.Message + "\n");
 					}
+                    */
 				}
 				catch(Exception ex)
 				{
 					Debug.Write("Exception in BMXNetConnectInfo.OnEventTimer: " + ex.Message + "\n");
 				}
-				finally
-				{
-					this.bmxNetLib.BMXRWL.ReleaseWriterLock();
-					this.m_timerEvent.Enabled = true;
-				}
-			}
+                finally
+                {
+                    //this.bmxNetLib.BMXRWL.ReleaseWriterLock(); 
+                    //this.m_timerEvent.Enabled = true;
+                }
+                
+            }
 			catch
 			{
 				Debug.Write("     OnEventTimer failed to obtain lock.\n");
 			}
 		}
+
+        
+        /// <summary>
+        /// Callback for Async operation to get events from RPMS/VISTA server
+        /// </summary>
+        /// <param name="itfAR"></param>
+        void BMXNetEventsCallback(IAsyncResult itfAR)
+        {
+            //Define datatable we will receive results at.
+            DataTable dtEvents;
+            //Get Result
+            AsyncResult ar = (AsyncResult)itfAR;
+            //Get Original Delegate
+            RPMSDataTableDelegate rdtd = (RPMSDataTableDelegate)ar.AsyncDelegate;
+            
+            //Complete the call of the delegate. We may lose connection so try catch
+            try
+            {
+                dtEvents = rdtd.EndInvoke(itfAR);
+            }
+            catch (Exception ex)
+            {
+                throw new BMXNetException("Lost connection to Server", ex);
+            }
+
+            BMXNetEventArgs args = new BMXNetEventArgs();
+            
+            //Fire off BMXNetEvent to interested subscribers
+            if (dtEvents.Rows.Count != 0)
+            {
+                foreach (DataRow dr in dtEvents.Rows)
+                {
+                    args.BMXEvent = dr["EVENT"].ToString();
+                    args.BMXParam = dr["PARAM"].ToString();
+                    if (BMXNetEvent != null)
+                    {
+                        BMXNetEvent(this, args);
+                    }
+                }
+            }
+
+            //re-enable the timer so it can check again for events
+            
+            this.m_timerEvent.Enabled = true;
+        }
 
 		#endregion BMXNetEvent
 
