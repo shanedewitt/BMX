@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("BMXNet22")]
+[assembly: AssemblyTitle("BMXNet23")]
 [assembly: AssemblyDescription("ADO.NET 2.0 Data Provider for VISTA")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("WorldVistA")]
