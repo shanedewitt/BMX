@@ -1,4 +1,4 @@
-Release notes for BMX 2.2 - released September 7, 2010
+Release notes for BMX 2.21 - released December 10th 2010
 
 *** IMPORTANT ***
 DO NOT INSTALL ON RPMS. THIS RELEASE IS FOR VISTA SYSTEMS!
@@ -15,6 +15,7 @@ Release 2.2 fixes several bugs:
  - Selection of division works properly now with BMXNet22.dll
  - Timeouts are better now so it won't leave processes hanging
  - Process name is now set upon connection
+Release 2.21 screens errors to log in the trap. It also makes a small fix that broke compatibility with Cache.
 
 *** IMPORTANT ***
 BMX support for GT.M uses xinetd listeners; not listeners managed by the Mumps environment. As such, the installation instructions provided by IHS won't work for GT.M.
