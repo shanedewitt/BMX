@@ -1,5 +1,5 @@
 BMXADE2	; IHS/OIT/HMW - BMXNet ADO.NET PROVIDER ;
-	;;2.2;BMX;;Sep 07, 2010
+	;;2.3;BMX;;Jan 25, 2011
 	;
 	;
 	;Dental Excel report demo

@@ -1,5 +1,5 @@
 BMXTRS	; IHS/OIT/HMW - UPPERCASE-LOWERCASE ;
-	;;2.2;BMX;;Sep 07, 2010
+	;;2.3;BMX;;Jan 25, 2011
 	;
 T(X)	;EP
 	;---> Translate word to mixed case.

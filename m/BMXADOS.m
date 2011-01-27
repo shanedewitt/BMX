@@ -1,6 +1,12 @@
-BMXADOS	; IHS/CIHA/GIS - UPDATE THE BMX ADO SCHEMA FILE ;
-	;;2.2;BMX;;Sep 07, 2010
+BMXADOS	; IHS/CIHA/GIS - UPDATE THE BMX ADO SCHEMA FILE ; 12/7/10 4:07pm
+	;;2.3;BMX;;Jan 25, 2011
 	; ENABLES NAVIGATION TO SUBFILES PRIOR TO UPDATING THE SCHEMA FILE ENTRY
+	   ; 
+	   ; Change log:
+	   ; Sam Habiel - 3101212 v2.21
+	   ; - Changed the quit from the line in ASTG b/c it couldn't compile in GT.M
+	   ;    F PCE=1:1:LEV S FNO=+$P(STG,",",PCE) D  I '$L(STG) Q "" **OLD**
+	;    F PCE=1:1:LEV S FNO=+$P(STG,",",PCE) D  Q:'$L(STG)  ; v 2.21 SMH
 	; 
 	; 
 	; 
@@ -231,7 +237,7 @@ PASS1	; PASS 1.  BUILD THE ARRAY OF ALL SUBFILES
 ASTG(STG)	; CONVERT STRING FROM FILE NUMBERS TO FILE NAMES
 	N PCE,LEV,FNO,NAME
 	S LEV=$L(STG,",")
-	F PCE=1:1:LEV S FNO=+$P(STG,",",PCE) D  I '$L(STG) Q ""
+	F PCE=1:1:LEV S FNO=+$P(STG,",",PCE) D  Q:'$L(STG)  ; v 2.21 SMH
 	. S NAME=$O(^DD(FNO,0,"NM",""))
 	. I $E(NAME)="*" S NAME=$E(NAME,2,99)
 	. I '$L(NAME) S STG="" Q

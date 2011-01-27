@@ -1,5 +1,5 @@
 BMXSQL6	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ; 7/20/2009
-	;;2.2;BMX;;Sep 07, 2010
+	;;2.3;BMX;;Jan 25, 2011
 	; Line EOR+3 used a 2 argument form of $Q which is not
 	; in the M 95 standard. Replaced this with a call to $$LAST,
 	; a new Extrinsic in this routine.
