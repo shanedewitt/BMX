@@ -5,26 +5,25 @@ namespace SamsStuff.IHS.BMX
 {
     class MyFirstApp
     {
-        static void Main()
+        static void Main(string[] args)
         {
+			if (args.Length < 4) 
+			{
+				Console.WriteLine("Enter parameters as server port ac vc");
+				return;
+			}
+			
             BMXNetLib ConnectionManager = new BMXNetLib();
-            Console.Write("Enter IP Address of Server: ");
-            string ip = Console.ReadLine();
-            Console.Write("Enter the listener port: ");
-            string port = Console.ReadLine();
-            int portno = int.Parse(port);
-            Console.Write("Enter your Access Code: ");
-            string accessCode = Console.ReadLine();
-            Console.Write("Enter your Verify Code: ");
-            string verifyCode = Console.ReadLine();
+			string ip = args[0];
+            int portno = int.Parse(args[1]);
+            string accessCode = args[2];
+            string verifyCode = args[3];
             ConnectionManager.MServerPort = portno;
             bool success = ConnectionManager.OpenConnection(ip, accessCode, verifyCode);
             Console.WriteLine("Connected: " + success.ToString() + " DUZ: " + ConnectionManager.DUZ);
             ConnectionManager.AppContext = "BMXRPC";
             string result = ConnectionManager.TransmitRPC("BMX USER", ConnectionManager.DUZ);
             Console.WriteLine("Simple RPC: User Name: " + result);
-            result = ConnectionManager.TransmitRPC("BMX UTF-8", "");
-            Console.WriteLine("UTF-8 stuff: " + result);
 
             //string result = 
             ConnectionManager.AppContext = "OR CPRS GUI CHART";
@@ -59,7 +58,7 @@ namespace SamsStuff.IHS.BMX
             da.Fill(ds,"BMXNetTable1");
             System.Data.DataTable dt = new System.Data.DataTable();
             dt = ds.Tables["BMXNetTable1"];
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 for (int j = 0; j < dt.Columns.Count; j++)
@@ -74,10 +73,17 @@ namespace SamsStuff.IHS.BMX
             Console.WriteLine();
             Console.WriteLine("More complicated SQL\n");
             BMXNetCommand cmd3 = (BMXNetCommand)conn.CreateCommand();
+			cmd3.CommandText = String.Empty; // Default
+#if VISTA
             cmd3.CommandText = @"SELECT PATIENT.NAME 'NAME', PATIENT.STATE 'STATE', 
                         STATE.ABBREVIATION 'ABBR', PATIENT.AGE 'AGE' FROM PATIENT, STATE
                         WHERE INTERNAL[PATIENT.STATE] = STATE.BMXIEN MAXRECORDS:5";
-            da.SelectCommand = cmd3;
+#elif RPMS
+			cmd3.CommandText = @"SELECT VA_PATIENT.NAME 'NAME', VA_PATIENT.STATE 'STATE',
+						STATE.ABBREVIATION 'ABBR', VA_PATIENT.AGE 'AGE' FROM VA_PATIENT, STATE
+						WHERE INTERNAL[VA_PATIENT.STATE] = STATE.BMXIEN MAXRECORDS:5";
+#endif
+			da.SelectCommand = cmd3;
             da.Fill(ds, "BMXNetTable2");
             System.Data.DataTable dt2 = new System.Data.DataTable();
             dt2 = ds.Tables["BMXNetTable2"];
