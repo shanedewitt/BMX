@@ -627,6 +627,11 @@ namespace IndianHealthService.BMXNet
 				try 
 				{
 					connector = new TcpClient();
+                    //test
+                    //connector.NoDelay = true;
+                    //connector.SendBufferSize = 65536;
+                    //connector.ReceiveBufferSize = 65536;
+                    //test
 					connector.Connect(m_cServerAddress, m_nMServerPort);		
 				}
 				catch (SocketException exSocket)
