@@ -1,5 +1,5 @@
 BMXUTL6	; IHS/OIT/HMW - BMXNET INSTALLATION CALLS ;
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	;
 	;
 POST	;EP - Called from BMX Installation postinit

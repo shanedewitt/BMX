@@ -1,5 +1,5 @@
 BMXRPC6	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	;
 	;
 USRKEYRS(BMXY,BMXDUZ)	       ;EP - Returns recordset of user's keys

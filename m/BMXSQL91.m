@@ -1,5 +1,5 @@
 BMXSQL91	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	;
 	;Below is dead code, but keep for later
 SETX2	;Don't need this unless porting to machine with

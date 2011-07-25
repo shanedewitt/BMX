@@ -1,5 +1,5 @@
 BMXMBRK2	; IHS/OIT/HMW - BMXNet MONITOR ;
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	;
 	;
 CAPI(BMXY,TAG,NAM,PAR)	;EP - make API call

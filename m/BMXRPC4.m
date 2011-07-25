@@ -1,5 +1,5 @@
 BMXRPC4	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	;
 PTINFORS(BMXY,BMXIEN)	       ;EP Patient Info Recordset
 	;

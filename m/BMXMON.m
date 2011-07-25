@@ -1,5 +1,5 @@
-BMXMON	 ; IHS/OIT/HMW - BMXNet MONITOR ; 7/20/2009 ; 12/7/10 3:20pm
-	   ;;2.3;BMX;;Jan 25, 2011
+BMXMON	 ; IHS/OIT/HMW,VW/SMH - BMXNet MONITOR ; 7/20/2009 ; 7/25/11 9:32am
+	   ;;2.31;BMX;;Jul 25, 2011
 	   ;
 	   ;IHS/OIT/HMW Patch 1 added validity check for passed-in namespace
 	   ; 7/20/2009: Release of patch to support GT.M WV/SMH
@@ -15,6 +15,10 @@ BMXMON	 ; IHS/OIT/HMW - BMXNet MONITOR ; 7/20/2009 ; 12/7/10 3:20pm
 	   ;  write error, it's not logged to the Error Trap
 	   ; Set Process Name crashed on Cache due to undefined IO("GT.M"). 
 	   ; Now this is surrounded by $Get to prevent this error.
+	   ; 6/25/2011: Fix to error trapping introduced by last patch. 
+	   ; Having N $ETRAP before setting $ETRAP as the backup trap causes
+	   ; an infinite loop because of the restoration of the old trap
+	   ; which lead it there in the first place. Removing N $ETRAP.
 	   ;
 STRT(BMXPORT,NS,IS,VB)	 ;EP
 	   ;Interactive monitor start
@@ -331,7 +335,12 @@ ETRAP	  ; -- on trapped error, send error info to client
 	   N BMXERC,BMXERR,BMXLGR
 	   ;
 	   ; Change trapping during trap.
-	   N $ETRAP S $ETRAP="D ^%ZTER HALT"
+	   ; V:2.31: Removed N $ETRAP as it caused an infinite loop
+	   ; when combined with the penultimate line of this trap.
+	   ; N $ETRAP causes it to revert back to the old trap which
+	   ; is this EP when a quit happens to pop the $STACK.
+	   ;
+	   S $ETRAP="D ^%ZTER HALT"
 	   ;
 	   ; If the error is simply that we can't write to the TCP device
 	   ; clear and log out

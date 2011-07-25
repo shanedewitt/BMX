@@ -1,5 +1,5 @@
 BMXRPC3	; IHS/OIT/HMW - BMX REMOTE PROCEDURE CALLS ;  ; 8/30/10 2:56pm
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	;Mods by WV/SMH
 	;7/26/09 Removed references to ^AUTTSITE, an IHS file in GETFAC*
 	;8/30/10 Changed GETFCRS to return a better list of user divisions

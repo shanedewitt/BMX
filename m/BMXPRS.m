@@ -1,5 +1,5 @@
 BMXPRS	; IHS/OIT/HMW - BMX WINDOWS UTILS ;
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	;
 	;
 PARSE(X)	;EP-Parse SQL Statement into array

@@ -1,5 +1,5 @@
 BMXMSEC	; IHS/OIT/HMW - BMXNet MONITOR ; 7/20/2009
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	; Edit History
 	; Line SETUP+2 has been changed to support GT.M //SMH 7/5/09
 	; Per Wally Fort's GT.M code in XWBTCPM, IP for GT.M is stored

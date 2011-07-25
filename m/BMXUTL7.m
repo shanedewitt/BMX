@@ -1,5 +1,5 @@
 BMXUTL7	; IHS/OIT/HMW - BMXNET INSTALLATION CALLS ; 9/7/10 9:34am
-	;;2.3;BMX;;Jan 25, 2011
+	;;2.31;BMX;;Jul 25, 2011
 	;
 	;
 ENV	;EP Environment Check
